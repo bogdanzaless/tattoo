@@ -1,18 +1,3 @@
-<html>
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body style="font-family:sans-serif; text-align:center; padding:40px;">
-
-  <h1>Привет 👋</h1>
-  
-  <p>Это моя татуировка)</p>
-
-  <a href="https://moskva.mts.ru/personal/mobilnaya-svyaz/tarifi/vse-tarifi/riil" 
-     style="display:inline-block; margin-top:20px; padding:15px 25px; background:black; color:white; text-decoration:none;">
-     ТАРИФ РИИЛ
-  </a>
-
-</body>
-</html>
+Small website for my QR-code tattoo)
+it will redirect here and show index.html contents
+feel free to do whatever you want

@@ -1,12 +1,12 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>QR Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body style="font-family:sans-serif; text-align:center; padding:40px;">
 
   <h1>Привет 👋</h1>
+  
   <p>Это моя татуировка)</p>
 
   <a href="https://moskva.mts.ru/personal/mobilnaya-svyaz/tarifi/vse-tarifi/riil" 

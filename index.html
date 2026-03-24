@@ -1,4 +1,385 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Это просто татуировка</title>
+  <style>
+    :root {
+      --bg: #050505;
+      --bg2: #0b0b0b;
+      --text: #f5f5f0;
+      --muted: rgba(255,255,255,0.58);
+      --line: rgba(255,255,255,0.08);
+      --glass: rgba(255,255,255,0.04);
+      --glow: rgba(255,255,255,0.10);
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      min-height: 100%;
+      background: radial-gradient(circle at 20% 20%, #111 0%, var(--bg) 35%, #020202 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      position: relative;
+    }
+
+    .noise,
+    .vignette,
+    .grid,
+    .orb {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+    }
+
+    .noise {
+      opacity: 0.045;
+      background-image:
+        repeating-radial-gradient(circle at 0 0, transparent 0, transparent 2px, rgba(255,255,255,0.6) 3px),
+        repeating-radial-gradient(circle at 100% 100%, transparent 0, transparent 2px, rgba(255,255,255,0.35) 3px);
+      background-size: 180px 180px, 220px 220px;
+      mix-blend-mode: soft-light;
+    }
+
+    .vignette {
+      background:
+        radial-gradient(circle at center, transparent 35%, rgba(0,0,0,0.35) 72%, rgba(0,0,0,0.72) 100%);
+    }
+
+    .grid {
+      opacity: 0.07;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(circle at center, black 35%, transparent 90%);
+      -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 90%);
+    }
+
+    .orb {
+      background:
+        radial-gradient(circle at 50% 30%, rgba(255,255,255,0.08), transparent 28%),
+        radial-gradient(circle at 70% 65%, rgba(255,255,255,0.05), transparent 22%);
+      filter: blur(18px);
+      animation: drift 12s ease-in-out infinite alternate;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(-10px, -10px, 0) scale(1); }
+      to   { transform: translate3d(12px, 18px, 0) scale(1.05); }
+    }
+
+    .wrap {
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 18px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 560px;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
+        rgba(255,255,255,0.02);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.02) inset,
+        0 20px 80px rgba(0,0,0,0.45),
+        0 0 80px rgba(255,255,255,0.04);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.05) 18%, transparent 36%);
+      transform: translateX(-120%);
+      animation: sheen 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes sheen {
+      0%, 78% { transform: translateX(-120%); }
+      100%    { transform: translateX(140%); }
+    }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.18);
+    }
+
+    .content {
+      padding: 24px 20px 22px;
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--line);
+      background: var(--glass);
+      color: rgba(255,255,255,0.72);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      margin-bottom: 18px;
+    }
+
+    .label::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.8);
+      box-shadow: 0 0 14px rgba(255,255,255,0.35);
+      animation: pulse 2.4s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(0.9); opacity: 0.7; }
+      50%      { transform: scale(1.2); opacity: 1; }
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 11vw, 72px);
+      line-height: 0.95;
+      letter-spacing: -0.05em;
+      font-weight: 800;
+    }
+
+    .line {
+      display: block;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: rise 0.8s forwards;
+    }
+
+    .line:nth-child(2) {
+      animation-delay: 0.18s;
+    }
+
+    @keyframes rise {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .desc {
+      margin: 18px 0 0;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 34ch;
+      opacity: 0;
+      transform: translateY(14px);
+      animation: rise 0.8s 0.35s forwards;
+    }
+
+    .divider {
+      margin: 22px 0 18px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
+      opacity: 0;
+      animation: fadeIn 1s 0.55s forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .quote {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.78);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: rise 0.8s 0.7s forwards;
+    }
+
+    .quote strong {
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-top: 28px;
+      opacity: 0;
+      transform: translateY(12px);
+      animation: rise 0.8s 0.9s forwards;
+    }
+
+    .micro {
+      font-size: 12px;
+      line-height: 1.5;
+      color: rgba(255,255,255,0.45);
+      max-width: 22ch;
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,0.03);
+      padding: 10px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      white-space: nowrap;
+      box-shadow: 0 0 30px rgba(255,255,255,0.03);
+    }
+
+    .hint {
+      position: fixed;
+      left: 50%;
+      bottom: max(18px, env(safe-area-inset-bottom));
+      transform: translateX(-50%);
+      z-index: 3;
+      font-size: 11px;
+      color: rgba(255,255,255,0.32);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 420px) {
+      .content {
+        padding: 20px 16px 18px;
+      }
+
+      .topline {
+        padding: 12px 14px;
+      }
+
+      .desc {
+        font-size: 15px;
+      }
+
+      .quote {
+        font-size: 13px;
+      }
+
+      .footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="noise"></div>
+  <div class="grid"></div>
+  <div class="orb"></div>
+  <div class="vignette"></div>
+
+  <main class="wrap">
+    <section class="card">
+      <div class="topline">
+        <span>scanned object</span>
+        <div class="dots" aria-hidden="true">
+          <span class="dot"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
+
+      <div class="content">
+        <div class="label">ничего секретного</div>
+
+        <h1>
+          <span class="line">это просто</span>
+          <span class="line">татуировка</span>
+        </h1>
+
+        <p class="desc">
+          Ты правда это отсканировал. Уважаю.
+          Тут нет скрытого клуба, загадки века или доступа к матрице.
+          Просто татуировка, которая решила стать цифровым объектом.
+        </p>
+
+        <div class="divider"></div>
+
+        <p class="quote">
+          Иногда <strong>прикол</strong> — это уже достаточная причина что-то сделать.
+        </p>
+
+        <div class="footer">
+          <div class="micro">
+            этот экран существует только потому,<br />
+            что кто-то однажды решил: а почему бы и нет
+          </div>
+          <div class="chip" id="time-chip">live object</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="hint">made of ink and bad decisions</div>
+
+  <script>
+    const chip = document.getElementById('time-chip');
+    const hour = new Date().getHours();
+
+    if (hour >= 5 && hour < 12) {
+      chip.textContent = 'доброе утро';
+    } else if (hour >= 12 && hour < 18) {
+      chip.textContent = 'добрый день';
+    } else if (hour >= 18 && hour < 24) {
+      chip.textContent = 'добрый вечер';
+    } else {
+      chip.textContent = 'поздновато';
+    }
+  </script>
+</body>
+</html>
+
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">

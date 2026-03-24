@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -8,11 +7,11 @@
 <body style="font-family:sans-serif; text-align:center; padding:40px;">
 
   <h1>Привет 👋</h1>
-  <p>Тут может быть любой текст, который ты меняешь когда хочешь.</p>
+  <p>Это моя татуировка)</p>
 
-  <a href="https://example.com" 
+  <a href="https://moskva.mts.ru/personal/mobilnaya-svyaz/tarifi/vse-tarifi/riil" 
      style="display:inline-block; margin-top:20px; padding:15px 25px; background:black; color:white; text-decoration:none;">
-     Перейти
+     ТАРИФ РИИЛ
   </a>
 
 </body>

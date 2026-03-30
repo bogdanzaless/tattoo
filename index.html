@@ -2,111 +2,177 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#050505" />
   <title>Это просто татуировка</title>
+
   <style>
     :root {
       --bg: #050505;
-      --bg2: #0b0b0b;
+      --bg-soft: #0d0d0d;
       --text: #f5f5f0;
-      --muted: rgba(255,255,255,0.58);
-      --line: rgba(255,255,255,0.08);
-      --glass: rgba(255,255,255,0.04);
-      --glow: rgba(255,255,255,0.10);
+      --muted: rgba(255, 255, 255, 0.60);
+      --muted-2: rgba(255, 255, 255, 0.38);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-2: rgba(255, 255, 255, 0.14);
+      --glass: rgba(255, 255, 255, 0.04);
+      --glass-2: rgba(255, 255, 255, 0.025);
+      --shadow:
+        0 24px 90px rgba(0, 0, 0, 0.52),
+        0 0 80px rgba(255, 255, 255, 0.035);
+      --radius: clamp(22px, 3vw, 30px);
+
+      --safe-top: max(16px, env(safe-area-inset-top));
+      --safe-right: max(16px, env(safe-area-inset-right));
+      --safe-bottom: max(16px, env(safe-area-inset-bottom));
+      --safe-left: max(16px, env(safe-area-inset-left));
     }
 
-    * {
+    *,
+    *::before,
+    *::after {
       box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
     }
 
-    html, body {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      min-height: 100%;
-      background: radial-gradient(circle at 20% 20%, #111 0%, var(--bg) 35%, #020202 100%);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      overflow-x: hidden;
+    html {
+      -webkit-text-size-adjust: 100%;
+      text-size-adjust: 100%;
+      scroll-behavior: smooth;
     }
 
     body {
+      margin: 0;
+      min-width: 320px;
+      min-height: 100vh;
+      min-height: 100svh;
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at 18% 16%, #171717 0%, #0b0b0b 28%, #040404 58%, #010101 100%);
+      overflow-x: hidden;
       position: relative;
     }
 
+    @supports (min-height: 100dvh) {
+      body {
+        min-height: 100dvh;
+      }
+    }
+
+    .bg,
     .noise,
-    .vignette,
     .grid,
-    .orb {
+    .vignette,
+    .glow-a,
+    .glow-b {
       position: fixed;
       inset: 0;
       pointer-events: none;
+      user-select: none;
+    }
+
+    .bg {
+      background:
+        radial-gradient(circle at 22% 24%, rgba(255,255,255,0.045), transparent 22%),
+        radial-gradient(circle at 76% 70%, rgba(255,255,255,0.032), transparent 20%),
+        linear-gradient(180deg, rgba(255,255,255,0.012), transparent 40%);
+      filter: blur(12px);
+      animation: bgFloat 16s ease-in-out infinite alternate;
+    }
+
+    .glow-a {
+      background:
+        radial-gradient(circle at 45% 24%, rgba(255,255,255,0.080), transparent 24%);
+      filter: blur(20px);
+      animation: driftA 14s ease-in-out infinite alternate;
+    }
+
+    .glow-b {
+      background:
+        radial-gradient(circle at 70% 72%, rgba(255,255,255,0.052), transparent 22%);
+      filter: blur(24px);
+      animation: driftB 18s ease-in-out infinite alternate;
     }
 
     .noise {
-      opacity: 0.045;
+      opacity: 0.04;
       background-image:
-        repeating-radial-gradient(circle at 0 0, transparent 0, transparent 2px, rgba(255,255,255,0.6) 3px),
-        repeating-radial-gradient(circle at 100% 100%, transparent 0, transparent 2px, rgba(255,255,255,0.35) 3px);
+        repeating-radial-gradient(circle at 0 0, transparent 0, transparent 2px, rgba(255,255,255,0.58) 3px),
+        repeating-radial-gradient(circle at 100% 100%, transparent 0, transparent 2px, rgba(255,255,255,0.28) 3px);
       background-size: 180px 180px, 220px 220px;
       mix-blend-mode: soft-light;
     }
 
-    .vignette {
-      background:
-        radial-gradient(circle at center, transparent 35%, rgba(0,0,0,0.35) 72%, rgba(0,0,0,0.72) 100%);
-    }
-
     .grid {
-      opacity: 0.07;
+      opacity: 0.055;
       background-image:
         linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
         linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
       background-size: 28px 28px;
-      mask-image: radial-gradient(circle at center, black 35%, transparent 90%);
-      -webkit-mask-image: radial-gradient(circle at center, black 35%, transparent 90%);
+      -webkit-mask-image: radial-gradient(circle at center, black 28%, transparent 88%);
+      mask-image: radial-gradient(circle at center, black 28%, transparent 88%);
     }
 
-    .orb {
+    .vignette {
       background:
-        radial-gradient(circle at 50% 30%, rgba(255,255,255,0.08), transparent 28%),
-        radial-gradient(circle at 70% 65%, rgba(255,255,255,0.05), transparent 22%);
-      filter: blur(18px);
-      animation: drift 12s ease-in-out infinite alternate;
+        radial-gradient(circle at center, transparent 32%, rgba(0,0,0,0.36) 72%, rgba(0,0,0,0.72) 100%);
     }
 
-    @keyframes drift {
-      from { transform: translate3d(-10px, -10px, 0) scale(1); }
-      to   { transform: translate3d(12px, 18px, 0) scale(1.05); }
+    @keyframes bgFloat {
+      from { transform: translate3d(-8px, -6px, 0) scale(1); }
+      to   { transform: translate3d(10px, 10px, 0) scale(1.03); }
+    }
+
+    @keyframes driftA {
+      from { transform: translate3d(-12px, -10px, 0) scale(1); }
+      to   { transform: translate3d(16px, 14px, 0) scale(1.06); }
+    }
+
+    @keyframes driftB {
+      from { transform: translate3d(10px, -8px, 0) scale(1); }
+      to   { transform: translate3d(-14px, 18px, 0) scale(1.05); }
+    }
+
+    .page {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding:
+        calc(var(--safe-top) + 10px)
+        var(--safe-right)
+        calc(var(--safe-bottom) + 58px)
+        var(--safe-left);
+    }
+
+    @supports (min-height: 100dvh) {
+      .page {
+        min-height: 100dvh;
+      }
     }
 
     .wrap {
-      min-height: 100dvh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px 18px;
-      position: relative;
-      z-index: 2;
+      width: min(100%, 640px);
     }
 
     .card {
-      width: 100%;
-      max-width: 560px;
-      border: 1px solid var(--line);
-      border-radius: 28px;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02)),
-        rgba(255,255,255,0.02);
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.02) inset,
-        0 20px 80px rgba(0,0,0,0.45),
-        0 0 80px rgba(255,255,255,0.04);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      overflow: hidden;
       position: relative;
+      width: 100%;
+      overflow: hidden;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.017)),
+        linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)),
+        var(--glass-2);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.018),
+        var(--shadow);
+      -webkit-backdrop-filter: blur(16px) saturate(120%);
+      backdrop-filter: blur(16px) saturate(120%);
+      isolation: isolate;
     }
 
     .card::before {
@@ -114,33 +180,62 @@
       position: absolute;
       inset: 0;
       background:
-        linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.05) 18%, transparent 36%);
-      transform: translateX(-120%);
-      animation: sheen 7s ease-in-out infinite;
+        linear-gradient(
+          115deg,
+          transparent 0%,
+          transparent 18%,
+          rgba(255,255,255,0.065) 27%,
+          rgba(255,255,255,0.020) 33%,
+          transparent 42%,
+          transparent 100%
+        );
+      transform: translateX(-130%);
+      animation: sheen 8s cubic-bezier(.22,1,.36,1) infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: inherit;
+      background:
+        radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent 36%);
+      opacity: 0.75;
+      z-index: 0;
       pointer-events: none;
     }
 
     @keyframes sheen {
-      0%, 78% { transform: translateX(-120%); }
-      100%    { transform: translateX(140%); }
+      0%, 74% { transform: translateX(-130%); }
+      100%    { transform: translateX(150%); }
+    }
+
+    .topline,
+    .content {
+      position: relative;
+      z-index: 1;
     }
 
     .topline {
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      justify-content: space-between;
       gap: 12px;
       padding: 14px 16px;
       border-bottom: 1px solid var(--line);
       color: var(--muted);
-      font-size: 12px;
-      letter-spacing: 0.08em;
+      font-size: 11px;
+      line-height: 1.2;
+      letter-spacing: 0.09em;
       text-transform: uppercase;
     }
 
     .dots {
-      display: flex;
+      display: inline-flex;
       gap: 6px;
+      flex-shrink: 0;
     }
 
     .dot {
@@ -148,58 +243,74 @@
       height: 8px;
       border-radius: 50%;
       background: rgba(255,255,255,0.18);
+      box-shadow: 0 0 14px rgba(255,255,255,0.05);
     }
 
     .content {
-      padding: 24px 20px 22px;
+      padding: clamp(18px, 4vw, 28px);
     }
 
     .label {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      border: 1px solid var(--line);
-      background: var(--glass);
-      color: rgba(255,255,255,0.72);
-      padding: 8px 12px;
-      border-radius: 999px;
-      font-size: 12px;
-      letter-spacing: 0.04em;
+      max-width: 100%;
       margin-bottom: 18px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--glass);
+      color: rgba(255,255,255,0.74);
+      font-size: 12px;
+      line-height: 1.2;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.015);
     }
 
     .label::before {
       content: "";
       width: 8px;
       height: 8px;
+      flex: 0 0 8px;
       border-radius: 50%;
-      background: rgba(255,255,255,0.8);
-      box-shadow: 0 0 14px rgba(255,255,255,0.35);
-      animation: pulse 2.4s infinite ease-in-out;
+      background: rgba(255,255,255,0.88);
+      box-shadow:
+        0 0 0 3px rgba(255,255,255,0.035),
+        0 0 14px rgba(255,255,255,0.36);
+      animation: pulse 2.4s ease-in-out infinite;
     }
 
     @keyframes pulse {
-      0%, 100% { transform: scale(0.9); opacity: 0.7; }
-      50%      { transform: scale(1.2); opacity: 1; }
+      0%, 100% {
+        transform: scale(0.92);
+        opacity: 0.72;
+      }
+      50% {
+        transform: scale(1.22);
+        opacity: 1;
+      }
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(42px, 11vw, 72px);
-      line-height: 0.95;
-      letter-spacing: -0.05em;
+      font-size: clamp(36px, 8vw, 72px);
+      line-height: 0.94;
+      letter-spacing: -0.055em;
       font-weight: 800;
+      text-wrap: balance;
     }
 
     .line {
       display: block;
       opacity: 0;
       transform: translateY(16px);
-      animation: rise 0.8s forwards;
+      animation: rise 0.82s cubic-bezier(.22,1,.36,1) forwards;
+      will-change: transform, opacity;
     }
 
     .line:nth-child(2) {
-      animation-delay: 0.18s;
+      animation-delay: 0.16s;
     }
 
     @keyframes rise {
@@ -211,21 +322,22 @@
 
     .desc {
       margin: 18px 0 0;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--muted);
       max-width: 34ch;
+      font-size: clamp(15px, 2.8vw, 16px);
+      line-height: 1.62;
+      color: var(--muted);
+      text-wrap: pretty;
       opacity: 0;
       transform: translateY(14px);
-      animation: rise 0.8s 0.35s forwards;
+      animation: rise 0.82s 0.32s cubic-bezier(.22,1,.36,1) forwards;
     }
 
     .divider {
-      margin: 22px 0 18px;
       height: 1px;
+      margin: 22px 0 18px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.18), transparent);
       opacity: 0;
-      animation: fadeIn 1s 0.55s forwards;
+      animation: fadeIn 1s 0.5s ease forwards;
     }
 
     @keyframes fadeIn {
@@ -234,12 +346,13 @@
 
     .quote {
       margin: 0;
-      font-size: 14px;
-      line-height: 1.7;
-      color: rgba(255,255,255,0.78);
+      font-size: clamp(13px, 2.5vw, 14px);
+      line-height: 1.72;
+      color: rgba(255,255,255,0.8);
+      text-wrap: pretty;
       opacity: 0;
       transform: translateY(10px);
-      animation: rise 0.8s 0.7s forwards;
+      animation: rise 0.82s 0.66s cubic-bezier(.22,1,.36,1) forwards;
     }
 
     .quote strong {
@@ -249,131 +362,245 @@
 
     .footer {
       display: flex;
-      justify-content: space-between;
       align-items: flex-end;
-      gap: 16px;
+      justify-content: space-between;
+      gap: 14px;
       margin-top: 28px;
       opacity: 0;
       transform: translateY(12px);
-      animation: rise 0.8s 0.9s forwards;
+      animation: rise 0.82s 0.84s cubic-bezier(.22,1,.36,1) forwards;
     }
 
     .micro {
+      max-width: 28ch;
       font-size: 12px;
-      line-height: 1.5;
-      color: rgba(255,255,255,0.45);
-      max-width: 26ch;
+      line-height: 1.55;
+      color: var(--muted-2);
+      text-wrap: pretty;
     }
 
     .chip {
-      border: 1px solid var(--line);
-      background: rgba(255,255,255,0.03);
+      flex-shrink: 0;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
       padding: 10px 12px;
+      border: 1px solid var(--line);
       border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      color: rgba(255,255,255,0.78);
       font-size: 12px;
-      color: rgba(255,255,255,0.75);
+      line-height: 1.2;
       white-space: nowrap;
-      box-shadow: 0 0 30px rgba(255,255,255,0.03);
+      box-shadow:
+        inset 0 0 0 1px rgba(255,255,255,0.012),
+        0 0 26px rgba(255,255,255,0.02);
     }
 
     .hint {
       position: fixed;
       left: 50%;
-      bottom: max(18px, env(safe-area-inset-bottom));
+      bottom: max(14px, env(safe-area-inset-bottom));
       transform: translateX(-50%);
-      z-index: 3;
+      z-index: 2;
+      width: calc(100% - 32px);
+      max-width: 420px;
+      text-align: center;
       font-size: 11px;
-      color: rgba(255,255,255,0.32);
+      line-height: 1.35;
       letter-spacing: 0.08em;
       text-transform: uppercase;
+      color: rgba(255,255,255,0.28);
+      text-wrap: balance;
+      pointer-events: none;
     }
 
     @media (max-width: 420px) {
-      .content {
-        padding: 20px 16px 18px;
+      .page {
+        padding:
+          calc(var(--safe-top) + 10px)
+          14px
+          calc(var(--safe-bottom) + 54px)
+          14px;
       }
 
       .topline {
         padding: 12px 14px;
+        font-size: 10px;
       }
 
-      .desc {
-        font-size: 15px;
+      .content {
+        padding: 18px 16px;
       }
 
-      .quote {
-        font-size: 13px;
+      .label {
+        font-size: 11px;
+        padding: 8px 11px;
       }
 
       .footer {
         flex-direction: column;
         align-items: flex-start;
       }
+
+      .chip {
+        white-space: normal;
+      }
+    }
+
+    @media (max-height: 700px) {
+      .page {
+        place-items: start center;
+      }
+
+      .wrap {
+        margin-top: 8px;
+      }
+    }
+
+    @media (max-height: 520px) and (orientation: landscape) {
+      .page {
+        padding-top: var(--safe-top);
+        padding-bottom: calc(var(--safe-bottom) + 42px);
+      }
+
+      .topline {
+        padding: 10px 14px;
+      }
+
+      .content {
+        padding: 16px;
+      }
+
+      h1 {
+        font-size: clamp(30px, 5vw, 48px);
+      }
+
+      .desc,
+      .quote {
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
+      .divider {
+        margin: 16px 0 14px;
+      }
+
+      .footer {
+        margin-top: 18px;
+      }
+
+      .hint {
+        font-size: 10px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+
+      .line,
+      .desc,
+      .quote,
+      .footer,
+      .divider {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    }
+
+    @supports not ((backdrop-filter: blur(16px)) or (-webkit-backdrop-filter: blur(16px))) {
+      .card {
+        background:
+          linear-gradient(180deg, rgba(18,18,18,0.94), rgba(8,8,8,0.96));
+      }
     }
   </style>
 </head>
 <body>
-  <div class="noise"></div>
-  <div class="grid"></div>
-  <div class="orb"></div>
-  <div class="vignette"></div>
+  <div class="bg" aria-hidden="true"></div>
+  <div class="glow-a" aria-hidden="true"></div>
+  <div class="glow-b" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+  <div class="grid" aria-hidden="true"></div>
+  <div class="vignette" aria-hidden="true"></div>
 
-  <main class="wrap">
-    <section class="card">
-      <div class="topline">
-        <span>scanned object</span>
-        <div class="dots" aria-hidden="true">
-          <span class="dot"></span>
-          <span class="dot"></span>
-          <span class="dot"></span>
-        </div>
-      </div>
-
-      <div class="content">
-        <div class="label">ничего секретного</div>
-
-        <h1>
-          <span class="line">это просто</span>
-          <span class="line">татуировка</span>
-        </h1>
-
-        <p class="desc">
-          Ты правда это отсканировал. Уважаю.
-          Тут нет скрытого клуба, загадки века или доступа к матрице.
-          Просто татуировка, которая решила стать цифровым объектом.
-        </p>
-
-        <div class="divider"></div>
-
-        <p class="quote">
-          Иногда <strong>прикол</strong> — это уже достаточная причина что-то сделать.
-        </p>
-
-        <div class="footer">
-          <div class="micro">
-            этот экран существует только потому, что кто-то однажды решил: а почему бы и нет
+  <main class="page">
+    <div class="wrap">
+      <section class="card" aria-labelledby="title">
+        <div class="topline">
+          <span>scanned object</span>
+          <div class="dots" aria-hidden="true">
+            <span class="dot"></span>
+            <span class="dot"></span>
+            <span class="dot"></span>
           </div>
-          <div class="chip" id="time-chip">live object</div>
         </div>
-      </div>
-    </section>
+
+        <div class="content">
+          <div class="label">ничего секретного</div>
+
+          <h1 id="title">
+            <span class="line">это просто</span>
+            <span class="line">татуировка</span>
+          </h1>
+
+          <p class="desc">
+            Ты правда это отсканировал. Уважаю.
+            Тут нет скрытого клуба, загадки века или доступа к матрице.
+            Просто татуировка, которая решила стать цифровым объектом.
+          </p>
+
+          <div class="divider" aria-hidden="true"></div>
+
+          <p class="quote">
+            Иногда <strong>прикол</strong> — это уже достаточная причина что-то сделать.
+          </p>
+
+          <div class="footer">
+            <div class="micro">
+              этот экран существует только потому, что кто-то однажды решил:
+              а почему бы и нет
+            </div>
+            <div class="chip" id="time-chip" aria-live="polite">live object</div>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
 
   <div class="hint">made of ink and bad decisions</div>
 
   <script>
-    const chip = document.getElementById('time-chip');
-    const hour = new Date().getHours();
+    (function () {
+      const chip = document.getElementById("time-chip");
+      if (!chip) return;
 
-    if (hour >= 5 && hour < 12) {
-      chip.textContent = 'доброе утро';
-    } else if (hour >= 12 && hour < 18) {
-      chip.textContent = 'добрый день';
-    } else if (hour >= 18 && hour < 24) {
-      chip.textContent = 'добрый вечер';
-    } else {
-      chip.textContent = 'поздновато';
-    }
+      const hour = new Date().getHours();
+      let text = "live object";
+
+      if (hour >= 5 && hour < 12) {
+        text = "доброе утро";
+      } else if (hour >= 12 && hour < 18) {
+        text = "добрый день";
+      } else if (hour >= 18 && hour < 24) {
+        text = "добрый вечер";
+      } else {
+        text = "поздновато";
+      }
+
+      chip.textContent = text;
+    })();
   </script>
 </body>
 </html>

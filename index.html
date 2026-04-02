@@ -1,3 +1,4 @@
+<!-- ТУТ САЙТ КАРТОЧКА ЭТО ПРОСТО ТАТУ -->
 <!-- <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -607,8 +608,8 @@
 </html> -->
 
 
-
-<!DOCTYPE html>
+<!-- ТУТ МЕМ КАРТИНКА В БЕЙС64 -->
+<!-- <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
@@ -638,18 +639,11 @@
     alt="photo"
     class="photo"
   />
-
-  <!-- <h1>Не слушай никого! Ты со всем справишься и все пройдет!!</h1>
-  <p>.</p> -->
-  <!-- <a href="https://moskva.mts.ru/personal/mobilnaya-svyaz/tarifi/vse-tarifi/riil" 
-     style="display:inline-block; margin-top:20px; padding:15px 25px; background:black; color:white; text-decoration:none;">
-     А ТУТ ТАРИФ РИИЛ!
-  </a> -->
 </body>
-</html>
+</html> -->
 
 
-
+<!-- ТУТ РЕДИРЕКТ НА ССЫЛКУ -->
 <!-- <!DOCTYPE html> 
 <html>
 <head>
@@ -659,3 +653,186 @@
   <p>Если не перенаправило — <a href="https://www.tbank.ru/cf/8tmWOC4RbcM">нажми сюда</a></p>
 </body>
 </html> -->
+
+
+<!-- ТУТ САЙТ ВИЗИТКА БЕЙТМАНА -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patrick Bateman Card</title>
+  <style>
+    :root {
+      --bg: #ececec;
+      --text: #050505;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "Times New Roman", Times, serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+    }
+
+    .card-page {
+      position: relative;
+      width: 100vw;
+      height: 56.25vw;
+      max-height: 100vh;
+      max-width: 177.78vh;
+      background: #eeeeee;
+      overflow: hidden;
+    }
+
+    .phone {
+      position: absolute;
+      top: 12.8%;
+      left: 5.3%;
+      margin: 0;
+      font-size: clamp(20px, 3.9vw, 56px);
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      line-height: 1;
+    }
+
+    .brand {
+      position: absolute;
+      top: 12.2%;
+      right: 5.9%;
+      text-align: left;
+      line-height: 0.9;
+      color: var(--text);
+    }
+
+    .brand-main {
+      font-size: clamp(22px, 4.1vw, 60px);
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      white-space: nowrap;
+    }
+
+    .brand-main .amp {
+      font-size: 0.72em;
+      display: inline-block;
+      transform: translateY(-0.02em);
+      margin: 0 0.04em;
+    }
+
+    .brand-sub {
+      display: block;
+      margin-top: 0.22em;
+      font-size: clamp(10px, 1.45vw, 20px);
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+
+    .center-block {
+      position: absolute;
+      left: 50%;
+      top: 50.4%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      width: 100%;
+      padding: 0 5vw;
+    }
+
+    .name,
+    .role {
+      margin: 0;
+      text-transform: uppercase;
+      font-weight: 700;
+      line-height: 0.98;
+      color: var(--text);
+    }
+
+    .name {
+      font-size: clamp(28px, 5.25vw, 74px);
+      letter-spacing: 0.01em;
+    }
+
+    .role {
+      margin-top: 0.16em;
+      font-size: clamp(26px, 5.15vw, 72px);
+      letter-spacing: 0.01em;
+    }
+
+    .bottom-line {
+      position: absolute;
+      text-align: center;
+      bottom: 5%;
+      margin: 0;
+      font-size: clamp(15px, 2.45vw, 36px);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.005em;
+      white-space: nowrap;
+    }
+
+    @media (max-aspect-ratio: 16/9) {
+      .card-page {
+        width: 100vw;
+        height: calc(100vw / 1.7777777778);
+      }
+    }
+
+    @media (min-aspect-ratio: 16/9) {
+      .card-page {
+        width: calc(100vh * 1.7777777778);
+        height: 100vh;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .brand {
+        right: 5%;
+      }
+
+      .bottom-line {
+        left: 2.8%;
+        right: 2.8%;
+        letter-spacing: -0.01em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="card-page">
+    <p class="phone">212 555 6342</p>
+
+    <div class="brand" aria-label="Pierce and Pierce">
+      <div class="brand-main">
+        <span>Pierce</span>
+        <span class="amp">&amp;</span><span>Pierce</span>
+      </div>
+      <span class="brand-sub">MERGERS AND AQUISITIONS</span>
+    </div>
+
+    <section class="center-block">
+      <h1 class="name">Patrick Bateman</h1>
+      <h2 class="role">Vice President</h2>
+    </section>
+
+    <p class="bottom-line">
+      358 Exchange Place New York, N.Y. 10099 FAX 212 555 6390 TELEX :0 4534
+    </p>
+  </main>
+</body>
+</html>

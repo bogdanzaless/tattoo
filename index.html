@@ -1,0 +1,1475 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Bogdan Zalessky</title>
+  <meta name="description" content="Creative portfolio and contacts of Bogdan Zalessky" />
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --window: rgba(245, 245, 247, 0.86);
+      --window-solid: rgba(245, 245, 247, 0.96);
+      --window-dark: rgba(24, 26, 32, 0.76);
+      --window-dark-solid: rgba(24, 26, 32, 0.96);
+      --line: rgba(0, 0, 0, 0.12);
+      --line-dark: rgba(255, 255, 255, 0.12);
+      --text: #15161a;
+      --muted: rgba(21, 22, 26, 0.58);
+      --text-dark: #f4f4f5;
+      --muted-dark: rgba(244, 244, 245, 0.62);
+      --accent: #0a84ff;
+      --radius: 22px;
+      --shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      -webkit-text-size-adjust: 100%;
+    }
+
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      overflow-x: hidden;
+      overscroll-behavior: none;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: -20%;
+      z-index: -2;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(74, 144, 255, 0.55), transparent 28%),
+        radial-gradient(circle at 78% 22%, rgba(190, 92, 255, 0.40), transparent 30%),
+        radial-gradient(circle at 52% 85%, rgba(255, 198, 92, 0.36), transparent 30%),
+        linear-gradient(135deg, #07080d 0%, #171927 50%, #07080d 100%);
+      animation: drift 18s ease-in-out infinite alternate;
+    }
+
+    body::after {
+      z-index: -1;
+      opacity: 0.38;
+      filter: blur(50px);
+      animation-duration: 24s;
+      animation-direction: alternate-reverse;
+    }
+
+    @keyframes drift {
+      from { transform: translate3d(-2%, -1%, 0) scale(1); }
+      to { transform: translate3d(2%, 2%, 0) scale(1.08); }
+    }
+
+    .page {
+      min-height: 100svh;
+      padding: max(22px, env(safe-area-inset-top)) 18px max(22px, env(safe-area-inset-bottom));
+      display: grid;
+      place-items: center;
+    }
+
+    .finder {
+      width: min(1040px, calc(100vw - 36px));
+      height: min(720px, calc(100svh - 44px));
+      max-height: calc(100svh - 44px);
+      min-height: min(560px, calc(100svh - 44px));
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      border: 1px solid rgba(255, 255, 255, 0.32);
+      border-radius: var(--radius);
+      background: var(--window);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      backdrop-filter: blur(34px) saturate(1.35);
+      -webkit-backdrop-filter: blur(34px) saturate(1.35);
+      transform-origin: bottom center;
+      transition: transform .34s ease, opacity .28s ease, width .34s ease, height .34s ease, border-radius .34s ease;
+    }
+
+    .finder.closed,
+    .finder.minimized {
+      opacity: 0;
+      transform: translateY(28px) scale(.92);
+      pointer-events: none;
+    }
+
+    .finder.fullscreen {
+      width: 100vw;
+      height: 100svh;
+      max-height: 100svh;
+      min-height: 0;
+      border-radius: 0;
+      border-left: 0;
+      border-right: 0;
+    }
+
+    .toolbar {
+      height: 56px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 16px;
+      padding: 0 18px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.35);
+    }
+
+    .traffic {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex: 0 0 auto;
+    }
+
+    .dot {
+      width: 13px;
+      height: 13px;
+      border-radius: 50%;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
+    }
+
+    .red { background: #ff5f57; }
+    .yellow { background: #ffbd2e; }
+    .green { background: #28c840; }
+
+    .dock-open,
+    .folder-dock-open {
+      position: fixed;
+      left: 50%;
+      z-index: 15;
+      transform: translateX(-50%) translateY(22px) scale(.96);
+      opacity: 0;
+      pointer-events: none;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      padding: 13px 18px;
+      background: rgba(245, 245, 247, 0.82);
+      color: #111;
+      font: inherit;
+      font-weight: 700;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .28);
+      backdrop-filter: blur(24px) saturate(1.3);
+      -webkit-backdrop-filter: blur(24px) saturate(1.3);
+      cursor: pointer;
+      transition: opacity .24s ease, transform .28s ease;
+    }
+
+    .dock-open { bottom: max(18px, env(safe-area-inset-bottom)); }
+    .folder-dock-open { bottom: max(72px, calc(env(safe-area-inset-bottom) + 72px)); z-index: 25; }
+
+    .dock-open.visible,
+    .folder-dock-open.visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .titlebar {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      font-size: 14px;
+      font-weight: 650;
+      color: rgba(20, 20, 24, 0.72);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toolbar-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 7px 10px;
+      background: rgba(255,255,255,0.38);
+      color: inherit;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .content {
+      min-height: 0;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      min-height: 0;
+      padding: 16px 12px;
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,0.22);
+      overflow: auto;
+    }
+
+    .profile-mini {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      padding: 10px;
+      border-radius: 16px;
+      margin-bottom: 10px;
+    }
+
+    .avatar {
+      width: 46px;
+      height: 46px;
+      border-radius: 15px;
+      background: linear-gradient(135deg, #111, #555);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      flex: 0 0 auto;
+    }
+
+    .name { font-weight: 760; line-height: 1.1; }
+    .tag { margin-top: 3px; color: var(--muted); font-size: 13px; }
+
+    .nav-title {
+      margin: 18px 10px 7px;
+      font-size: 11px;
+      font-weight: 760;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .07em;
+    }
+
+    .nav-list {
+      display: grid;
+      gap: 2px;
+    }
+
+    .nav-item {
+      width: 100%;
+      border: 0;
+      border-radius: 12px;
+      padding: 9px 10px;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: var(--text);
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .nav-item.active,
+    .nav-item:hover { background: rgba(10,132,255,.13); }
+
+    .main {
+      min-width: 0;
+      min-height: 0;
+      padding: 22px;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      gap: 20px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 20px;
+      align-items: end;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(32px, 6vw, 74px);
+      line-height: .88;
+      letter-spacing: -0.07em;
+    }
+
+    .lead {
+      max-width: 560px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: clamp(15px, 2vw, 18px);
+      line-height: 1.45;
+    }
+
+    .status-card {
+      min-width: 184px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      padding: 14px;
+      background: rgba(255,255,255,.36);
+    }
+
+    .status-card strong {
+      display: block;
+      font-size: 24px;
+      letter-spacing: -0.04em;
+    }
+
+    .status-card span {
+      display: block;
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .grid {
+      align-content: start;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+      gap: 15px;
+      min-height: 0;
+    }
+
+    .grid.list-view {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .grid.list-view .file {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      text-align: left;
+      gap: 12px;
+      min-height: auto;
+    }
+
+    .grid.list-view .icon {
+      width: 44px;
+      height: 38px;
+      margin: 0;
+      font-size: 21px;
+    }
+
+    .file[hidden] {
+      display: none !important;
+    }
+
+    .file {
+      min-width: 0;
+      border: 1px solid transparent;
+      border-radius: 18px;
+      padding: 14px 10px 12px;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      text-align: center;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+      font: inherit;
+    }
+
+    .file:hover,
+    .file:focus-visible {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.38);
+      border-color: var(--line);
+    }
+
+    .file:active {
+      transform: scale(.98);
+      background: rgba(255,255,255,.46);
+      border-color: var(--line);
+    }
+
+    .icon {
+      width: 66px;
+      height: 56px;
+      margin: 0 auto 10px;
+      display: grid;
+      place-items: center;
+      border-radius: 15px;
+      background: linear-gradient(180deg, #78b7ff, #147dff);
+      box-shadow: 0 12px 24px rgba(10,132,255,.22);
+      color: #fff;
+      font-size: 30px;
+    }
+
+    .icon.fileicon { background: linear-gradient(180deg, #ffffff, #dfe4ee); color: #111; }
+    .icon.black { background: linear-gradient(180deg, #2a2b31, #090a0d); }
+    .icon.orange { background: linear-gradient(180deg, #ffd088, #ff8a1d); }
+    .icon.purple { background: linear-gradient(180deg, #d8adff, #8f42ff); }
+
+    .filename {
+      display: block;
+      font-size: 13px;
+      font-weight: 620;
+      overflow-wrap: anywhere;
+      line-height: 1.2;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: none;
+      place-items: center;
+      padding: 18px;
+      background: rgba(0,0,0,.34);
+    }
+
+    .modal.open { display: grid; }
+
+    .modal-card {
+      width: min(560px, 100%);
+      max-height: calc(100svh - 36px);
+      border-radius: 24px;
+      border: 1px solid rgba(255,255,255,.34);
+      background: rgba(246,246,248,.9);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      transform-origin: bottom center;
+      transition: transform .34s ease, opacity .28s ease, width .34s ease, height .34s ease, border-radius .34s ease;
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+
+    .modal.minimized {
+      background: transparent;
+      pointer-events: none;
+    }
+
+    .modal.minimized .modal-card {
+      opacity: 0;
+      transform: translateY(28px) scale(.92);
+      pointer-events: none;
+    }
+
+    .modal.fullscreen { padding: 10px; }
+
+    .modal.fullscreen .modal-card {
+      width: 100%;
+      height: calc(100svh - 20px);
+      max-height: calc(100svh - 20px);
+      border-radius: 26px;
+    }
+
+    .modal-head {
+      height: 48px;
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: center;
+      gap: 12px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .modal-titlebar {
+      min-width: 0;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-body {
+      min-height: 0;
+      padding: 24px;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-body h2 { margin: 0 0 8px; font-size: 28px; letter-spacing: -0.05em; }
+    .modal-body p { margin: 0 0 18px; color: var(--muted); line-height: 1.5; }
+
+    .links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .link {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 15px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.55);
+      border: 1px solid var(--line);
+      color: inherit;
+      text-decoration: none;
+      font-weight: 650;
+    }
+
+    .link span { color: var(--muted); font-weight: 500; }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .finder { background: var(--window-solid); }
+      .dock-open,
+      .folder-dock-open { background: var(--window-solid); }
+      .modal-card { background: var(--window-solid); }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      .finder { background: var(--window-dark); color: var(--text-dark); border-color: rgba(255,255,255,.16); }
+      .toolbar { background: rgba(255,255,255,.05); border-color: var(--line-dark); }
+      .titlebar { color: rgba(255,255,255,.72); }
+      .sidebar { background: rgba(255,255,255,.035); border-color: var(--line-dark); }
+      .tag, .lead, .nav-title, .status-card span, .toolbar-actions, .modal-titlebar, .modal-body p, .link span { color: var(--muted-dark); }
+      .nav-item { color: var(--text-dark); }
+      .pill, .status-card, .file:hover, .file:focus-visible, .modal-card, .link { border-color: var(--line-dark); background: rgba(255,255,255,.08); }
+      .modal-card { color: var(--text-dark); }
+      .dock-open, .folder-dock-open { background: rgba(24, 26, 32, 0.82); color: var(--text-dark); border-color: var(--line-dark); }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+        .finder,
+        .dock-open,
+        .folder-dock-open,
+        .modal-card { background: var(--window-dark-solid); }
+      }
+    }
+
+    @media (max-width: 900px) {
+      .page {
+        padding: 12px;
+        place-items: center;
+      }
+
+      .finder {
+        width: calc(100vw - 24px);
+        height: calc(100svh - 24px);
+        max-height: calc(100svh - 24px);
+        min-height: 0;
+        border-radius: 26px;
+      }
+
+      .finder.fullscreen {
+        width: 100vw;
+        height: 100svh;
+        max-height: 100svh;
+        min-height: 0;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .content {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto minmax(0, 1fr);
+      }
+
+      .sidebar {
+        position: sticky;
+        top: 0;
+        z-index: 4;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        padding: 10px 12px;
+        overflow: hidden;
+        backdrop-filter: blur(22px) saturate(1.2);
+        -webkit-backdrop-filter: blur(22px) saturate(1.2);
+      }
+
+      .profile-mini {
+        margin-bottom: 8px;
+        padding: 4px 2px;
+      }
+
+      .avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 13px;
+        font-size: 15px;
+      }
+
+      .name { font-size: 14px; }
+      .tag { font-size: 12px; }
+      .nav-title { display: none; }
+
+      .nav-list {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 2px 0 1px;
+        scrollbar-width: none;
+        scroll-snap-type: x proximity;
+      }
+
+      .nav-list::-webkit-scrollbar { display: none; }
+
+      .nav-item {
+        flex: 0 0 auto;
+        width: auto;
+        min-height: 36px;
+        padding: 8px 11px;
+        white-space: nowrap;
+        background: rgba(255,255,255,.16);
+        scroll-snap-align: start;
+      }
+
+      .main {
+        padding: 18px 14px 28px;
+        gap: 18px;
+      }
+
+      .hero {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      h1 {
+        font-size: clamp(42px, 15vw, 64px);
+        line-height: .9;
+      }
+
+      .lead {
+        margin-top: 10px;
+        font-size: 15px;
+        line-height: 1.42;
+        max-width: 100%;
+      }
+
+      .status-card {
+        min-width: 0;
+        padding: 12px 13px;
+        border-radius: 18px;
+      }
+
+      .status-card strong { font-size: 22px; }
+      .status-card span { font-size: 12px; }
+
+      .grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px 12px;
+        padding: 2px 4px 20px;
+      }
+
+      .file {
+        min-height: 110px;
+        padding: 12px 8px 10px;
+        border-radius: 18px;
+      }
+
+      .file:hover { transform: none; }
+      .file:active { transform: scale(.97); }
+
+      .icon {
+        width: 58px;
+        height: 48px;
+        margin-bottom: 8px;
+        border-radius: 14px;
+        font-size: 25px;
+      }
+
+      .filename { font-size: 12px; }
+
+      .modal {
+        padding: 12px;
+        place-items: center;
+        background: rgba(0,0,0,.38);
+      }
+
+      .modal-card {
+        width: 100%;
+        height: calc(100svh - 24px);
+        max-height: calc(100svh - 24px);
+        border-radius: 26px;
+      }
+
+      .modal-head {
+        height: 56px;
+        padding: 0 14px;
+      }
+
+      .modal-titlebar {
+        text-align: left;
+      }
+
+      .modal-body {
+        padding: 22px 16px max(24px, env(safe-area-inset-bottom));
+      }
+
+      .modal-body h2 {
+        font-size: 30px;
+        line-height: 1;
+      }
+
+      .modal-body p {
+        font-size: 15px;
+        line-height: 1.45;
+      }
+
+      .link {
+        min-height: 54px;
+        padding: 14px 15px;
+        border-radius: 17px;
+      }
+
+      .modal.fullscreen {
+        padding: 0;
+        place-items: stretch;
+      }
+
+      .modal.fullscreen .modal-card {
+        width: 100%;
+        height: 100svh;
+        max-height: 100svh;
+        border-radius: 0;
+      }
+
+      .dock-open,
+      .folder-dock-open {
+        width: min(calc(100% - 28px), 360px);
+        padding: 14px 18px;
+        text-align: center;
+      }
+
+      .dock-open { bottom: max(14px, env(safe-area-inset-bottom)); }
+      .folder-dock-open { bottom: max(76px, calc(env(safe-area-inset-bottom) + 76px)); }
+    }
+
+    @media (max-width: 520px) {
+      body::after {
+        filter: blur(28px);
+      }
+
+      .page {
+        padding: 12px;
+        place-items: center;
+      }
+
+      .finder {
+        width: calc(100vw - 24px);
+        height: calc(100svh - 24px);
+        border-radius: 24px;
+        border-left: 1px solid rgba(255, 255, 255, 0.32);
+        border-right: 1px solid rgba(255, 255, 255, 0.32);
+      }
+
+      .finder.fullscreen {
+        width: 100vw;
+        height: 100svh;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .finder.fullscreen .toolbar,
+      .modal.fullscreen .modal-head {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+
+      .modal {
+        padding: 12px;
+        place-items: center;
+      }
+
+      .modal-card {
+        width: 100%;
+        height: calc(100svh - 24px);
+        max-height: calc(100svh - 24px);
+        border-radius: 24px;
+      }
+
+      .modal.fullscreen {
+        padding: 0;
+        place-items: stretch;
+      }
+
+      .modal.fullscreen .modal-card {
+        width: 100%;
+        height: 100svh;
+        max-height: 100svh;
+        border-radius: 0;
+      }
+
+      .toolbar {
+        height: calc(54px + env(safe-area-inset-top));
+        padding: env(safe-area-inset-top) 12px 0;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        gap: 10px;
+      }
+
+      .dot {
+        width: 14px;
+        height: 14px;
+      }
+
+      .titlebar {
+        justify-content: flex-start;
+        font-size: 12px;
+      }
+
+      .toolbar-actions {
+        gap: 6px;
+      }
+
+      .pill {
+        padding: 7px 8px;
+        font-size: 11px;
+      }
+
+      .sidebar {
+        padding: 9px 12px 10px;
+      }
+
+      .main {
+        padding: 18px 12px max(28px, env(safe-area-inset-bottom));
+      }
+
+      h1 {
+        font-size: clamp(40px, 16vw, 58px);
+      }
+
+      .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+        padding-inline: 0;
+      }
+
+      .file {
+        min-height: 112px;
+      }
+
+      .icon {
+        width: 62px;
+        height: 52px;
+      }
+    }
+
+    @media (max-width: 360px) {
+      .toolbar {
+        gap: 8px;
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .traffic {
+        gap: 6px;
+      }
+
+      .titlebar {
+        max-width: 100%;
+        justify-content: center;
+      }
+
+      .toolbar-actions {
+        display: flex;
+        gap: 4px;
+      }
+
+      .pill {
+        padding: 6px 7px;
+        font-size: 10px;
+      }
+
+      .grid {
+        gap: 8px;
+      }
+
+      .file {
+        padding-inline: 6px;
+      }
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .file:hover,
+      .nav-item:hover {
+        background: transparent;
+      }
+
+      .nav-item.active {
+        background: rgba(10,132,255,.18);
+      }
+
+      .file:active,
+      .file:focus-visible {
+        background: rgba(255,255,255,.26);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="finder" id="finderWindow" aria-label="Personal finder profile">
+      <header class="toolbar">
+        <div class="traffic" aria-label="Управление окном" data-i18n-aria="windowControls">
+          <button class="dot red" id="closeWindow" aria-label="Закрыть окно" data-i18n-aria="closeWindow"></button>
+          <button class="dot yellow" id="minimizeWindow" aria-label="Свернуть окно" data-i18n-aria="minimizeWindow"></button>
+          <button class="dot green" id="fullscreenWindow" aria-label="На весь экран" data-i18n-aria="fullscreenWindow"></button>
+        </div>
+        <div class="titlebar" data-i18n="titlebar">📁 bogdan_zaless</div>
+        <div class="toolbar-actions">
+          <button class="pill" id="gridToggle" type="button" aria-pressed="true">Grid</button>
+          <button class="pill" id="languageToggle" type="button" aria-label="Switch language">EN</button>
+          <button class="pill" id="shareButton" type="button">Share</button>
+        </div>
+      </header>
+
+      <div class="content">
+        <aside class="sidebar">
+          <div class="profile-mini">
+            <div class="avatar">B</div>
+            <div>
+              <div class="name" data-i18n="sidebarName">Bogdan</div>
+              <div class="tag" data-i18n="sidebarTag">Creative Director</div>
+            </div>
+          </div>
+
+          <div class="nav-title" data-i18n="navTitle">Favorites</div>
+          <div class="nav-list">
+            <button class="nav-item active" data-filter="all" data-i18n="navDesktop">🖥️ Рабочий Стол</button>
+            <button class="nav-item" data-filter="links" data-i18n="navLinks">🔗 Ссылки</button>
+            <button class="nav-item" data-filter="work" data-i18n="navWork">💼 Работы</button>
+            <button class="nav-item" data-filter="contacts" data-i18n="navContacts">💬 Контакты</button>
+          </div>
+        </aside>
+
+        <section class="main">
+          <div class="hero">
+            <div>
+              <h1 data-i18n="heroTitle">Богдан<br>Залесский</h1>
+              <p class="lead" data-i18n="heroLead">Привет! Я креатор, дизайнер с опытом в графическом и коммуникационном дизайне, брендинге, а также копирайтер с опытом управления командой. Здесь ты найдёшь мои работы, контакты и кое-что интересное. Открыт к новым проектам и сотрудничеству.</p>
+            </div>
+            
+          </div>
+
+          <div class="grid" id="grid">
+            <button class="file" data-type="links" data-folder="social" data-title="Соцсети" data-text="Все основные способы связаться со мной и следить за моими работами." data-links='[{"label":"Telegram","url":"https://t.me/bogdan_zaless"},{"label":"Instagram","url":"https://www.instagram.com/bogdan_zaless"}]'>
+              <span class="icon">📁</span>
+              <span class="filename" data-i18n="fileSocial">Соцсети</span>
+            </button>
+
+            <button class="file" data-type="work" data-folder="portfolio" data-title="Портфолио" data-text="Подборка моих работ, кейсов и проектов." data-links='[{"label":"Скоро здесь","url":"#"}]'>
+              <span class="icon purple">📁</span>
+              <span class="filename" data-i18n="filePortfolio">Портфолио</span>
+            </button>
+
+            <button class="file" data-type="contacts" data-folder="contacts" data-title="Контакты" data-text="Связаться со мной напрямую — самый быстрый способ обсудить проект." data-links='[{"label":"Telegram","url":"https://t.me/bogdan_zaless"},{"label":"Email","url":"mailto:bogdanzaless@gmail.com"}]'>
+              <span class="icon orange">📁</span>
+              <span class="filename" data-i18n="fileContacts">Контакты</span>
+            </button>
+
+            <button class="file" data-type="work" data-folder="about" data-title="Обо мне" data-text="Уже много лет работаю в сфере креатива, маркетинга и дизайна: от визуальных концепций до текстов и идей спец. проектов. Обожаю проекты с характером и смыслом, когда есть не только форма, но и сильная идея." data-links='[]'>
+              <span class="icon fileicon">📄</span>
+              <span class="filename" data-i18n="fileAbout">Обо мне</span>
+            </button>
+
+            
+
+            <button class="file" data-type="contacts" data-folder="qr" data-title="QR Code" data-text="Здесь позже появится QR-код или быстрый доступ к дополнительным материалам." data-links='[]'>
+              <span class="icon fileicon">▦</span>
+              <span class="filename" data-i18n="fileQr">QR Code</span>
+            </button>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <button class="dock-open" id="openWindow" type="button" data-i18n="openWindowButton">📁 Открыть Finder</button>
+
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div class="traffic" aria-label="Управление папкой" data-i18n-aria="folderControls">
+          <button class="dot red" id="closeFolder" aria-label="Закрыть папку" data-i18n-aria="closeFolder"></button>
+          <button class="dot yellow" id="minimizeFolder" aria-label="Свернуть папку" data-i18n-aria="minimizeFolder"></button>
+          <button class="dot green" id="fullscreenFolder" aria-label="Открыть папку на весь экран" data-i18n-aria="fullscreenFolder"></button>
+        </div>
+        <div class="modal-titlebar" id="folderTitlebar">Folder</div>
+      </div>
+      <div class="modal-body">
+        <h2 id="modalTitle"></h2>
+        <p id="modalText"></p>
+        <div class="links" id="modalLinks"></div>
+      </div>
+    </div>
+  </div>
+
+  <button class="folder-dock-open" id="openFolder" type="button">📂 Открыть папку</button>
+
+  <script>
+    'use strict';
+
+    const finderWindow = document.querySelector('#finderWindow');
+    const closeWindow = document.querySelector('#closeWindow');
+    const minimizeWindow = document.querySelector('#minimizeWindow');
+    const fullscreenWindow = document.querySelector('#fullscreenWindow');
+    const openWindow = document.querySelector('#openWindow');
+    const modal = document.querySelector('#modal');
+    const modalTitle = document.querySelector('#modalTitle');
+    const folderTitlebar = document.querySelector('#folderTitlebar');
+    const closeFolder = document.querySelector('#closeFolder');
+    const minimizeFolder = document.querySelector('#minimizeFolder');
+    const fullscreenFolder = document.querySelector('#fullscreenFolder');
+    const openFolder = document.querySelector('#openFolder');
+    const modalText = document.querySelector('#modalText');
+    const modalLinks = document.querySelector('#modalLinks');
+    const grid = document.querySelector('#grid');
+    const files = [...document.querySelectorAll('.file')];
+    const navItems = [...document.querySelectorAll('.nav-item')];
+    const gridBtn = document.querySelector('#gridToggle');
+    const shareBtn = document.querySelector('#shareButton');
+    const languageBtn = document.querySelector('#languageToggle');
+
+    let isGrid = true;
+    let currentLanguage = 'ru';
+    let activeFolderTitle = 'папку';
+    let activeFolderKey = null;
+
+    const translations = {
+      ru: {
+        htmlLang: 'ru',
+        pageTitle: 'Богдан Залесский',
+        metaDescription: 'Портфолио и контакты Богдана Залесского',
+        titlebar: '📁 bogdan_zaless',
+        sidebarName: 'Bogdan',
+        sidebarTag: 'Creative Director',
+        navTitle: 'Favorites',
+        navDesktop: '🖥️ Рабочий Стол',
+        navLinks: '🔗 Ссылки',
+        navWork: '💼 Работы',
+        navContacts: '💬 Контакты',
+        heroTitle: 'Богдан<br>Залесский',
+        heroLead: 'Привет! Я креатор, дизайнер с опытом в графическом и коммуникационном дизайне, брендинге, а также копирайтер с опытом управления командой. Здесь ты найдёшь мои работы, контакты и кое-что интересное. Открыт к новым проектам и сотрудничеству.',
+        fileSocial: 'Соцсети',
+        filePortfolio: 'Портфолио',
+        fileContacts: 'Контакты',
+        fileAbout: 'Обо мне',
+        fileQr: 'QR Code',
+        openWindowButton: '📁 Открыть Finder',
+        openFolderPrefix: '📂 Открыть ',
+        previewOnly: 'Preview only',
+        noLinks: 'no links',
+        grid: 'Grid',
+        list: 'List',
+        share: 'Share',
+        copied: 'Copied',
+        copyFailed: 'Copy failed',
+        languageButton: 'EN',
+        windowControls: 'Управление окном',
+        folderControls: 'Управление папкой',
+        closeWindow: 'Закрыть окно',
+        minimizeWindow: 'Свернуть окно',
+        fullscreenWindow: 'На весь экран',
+        closeFolder: 'Закрыть папку',
+        minimizeFolder: 'Свернуть папку',
+        fullscreenFolder: 'Открыть папку на весь экран',
+        folders: {
+          social: { title: 'Соцсети', text: 'Все основные способы связаться со мной и следить за моими работами.' },
+          portfolio: { title: 'Портфолио', text: 'Подборка моих работ, кейсов и проектов.', links: [{ label: 'Скоро здесь', url: '#' }] },
+          contacts: { title: 'Контакты', text: 'Связаться со мной напрямую — самый быстрый способ обсудить проект.' },
+          about: { title: 'Обо мне', text: 'Уже много лет работаю в сфере креатива, маркетинга и дизайна: от визуальных концепций до текстов и идей спец. проектов. Обожаю проекты с характером и смыслом, когда есть не только форма, но и сильная идея.', links: [] },
+          qr: { title: 'QR Code', text: 'Здесь позже появится QR-код или быстрый доступ к дополнительным материалам.', links: [] }
+        }
+      },
+      en: {
+        htmlLang: 'en',
+        pageTitle: 'Bogdan Zalessky',
+        metaDescription: 'Creative portfolio and contacts of Bogdan Zalessky',
+        titlebar: '📁 bogdan_zaless',
+        sidebarName: 'Bogdan',
+        sidebarTag: 'Creative Director',
+        navTitle: 'Favorites',
+        navDesktop: '🖥️ Desktop',
+        navLinks: '🔗 Links',
+        navWork: '💼 Work',
+        navContacts: '💬 Contacts',
+        heroTitle: 'Bogdan<br>Zalesskiy',
+        heroLead: 'Hi! I’m Bogdan — a creator and designer with experience in graphic and communication design, branding, and creative copywriting. I also have experience managing teams. Here you’ll find my work, contacts, and a few interesting things. I’m always open to new projects and collaborations.',
+        fileSocial: 'Socials',
+        filePortfolio: 'Portfolio',
+        fileContacts: 'Contacts',
+        fileAbout: 'About me',
+        fileQr: 'QR Code',
+        openWindowButton: '📁 Open Finder',
+        openFolderPrefix: '📂 Open ',
+        previewOnly: 'Preview only',
+        noLinks: 'no links',
+        grid: 'Grid',
+        list: 'List',
+        share: 'Share',
+        copied: 'Copied',
+        copyFailed: 'Copy failed',
+        languageButton: 'RU',
+        windowControls: 'Window controls',
+        folderControls: 'Folder controls',
+        closeWindow: 'Close window',
+        minimizeWindow: 'Minimize window',
+        fullscreenWindow: 'Enter fullscreen',
+        closeFolder: 'Close folder',
+        minimizeFolder: 'Minimize folder',
+        fullscreenFolder: 'Open folder fullscreen',
+        folders: {
+          social: { title: 'Socials', text: 'The main ways to contact me and follow my work.' },
+          portfolio: { title: 'Portfolio', text: 'A selection of my work, cases, and projects.', links: [{ label: 'Coming soon', url: '#' }] },
+          contacts: { title: 'Contacts', text: 'The fastest way to reach me and discuss a project.' },
+          about: { title: 'About me', text: 'I have been working in creativity, marketing, and design for years: from visual concepts to copy and ideas for special projects. I love projects with character and meaning — projects where there is not only form, but also a strong idea.', links: [] },
+          qr: { title: 'QR Code', text: 'A QR code or quick access to extra materials will appear here later.', links: [] }
+        }
+      }
+    };
+
+    function assertElement(name, element) {
+      if (!element) {
+        throw new Error(`Missing required element: ${name}`);
+      }
+    }
+
+    function runSmokeTests() {
+      assertElement('finderWindow', finderWindow);
+      assertElement('closeWindow', closeWindow);
+      assertElement('minimizeWindow', minimizeWindow);
+      assertElement('fullscreenWindow', fullscreenWindow);
+      assertElement('openWindow', openWindow);
+      assertElement('modal', modal);
+      assertElement('modalTitle', modalTitle);
+      assertElement('folderTitlebar', folderTitlebar);
+      assertElement('closeFolder', closeFolder);
+      assertElement('minimizeFolder', minimizeFolder);
+      assertElement('fullscreenFolder', fullscreenFolder);
+      assertElement('openFolder', openFolder);
+      assertElement('modalText', modalText);
+      assertElement('modalLinks', modalLinks);
+      assertElement('grid', grid);
+      assertElement('gridBtn', gridBtn);
+      assertElement('shareBtn', shareBtn);
+      assertElement('languageBtn', languageBtn);
+
+      if (files.length === 0) throw new Error('No file buttons found');
+      if (navItems.length === 0) throw new Error('No navigation buttons found');
+
+      files.forEach((file, index) => {
+        JSON.parse(file.dataset.links || '[]');
+        if (!file.dataset.title) throw new Error(`File ${index} has no data-title`);
+      });
+    }
+
+    function isLocalDebug() {
+      return ['localhost', '127.0.0.1', ''].includes(window.location.hostname) || window.location.search.includes('debug=true');
+    }
+
+    function appendTextElement(parent, tagName, text) {
+      const element = document.createElement(tagName);
+      element.textContent = text;
+      parent.appendChild(element);
+      return element;
+    }
+
+    function createLinkRow(link) {
+      const a = document.createElement('a');
+      a.className = 'link';
+      a.href = link.url || '#';
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      appendTextElement(a, 'strong', link.label || 'Link');
+      appendTextElement(a, 'span', '↗');
+      return a;
+    }
+
+    function createEmptyRow() {
+      const empty = document.createElement('div');
+      empty.className = 'link';
+      appendTextElement(empty, 'strong', translations[currentLanguage].previewOnly);
+      appendTextElement(empty, 'span', translations[currentLanguage].noLinks);
+      return empty;
+    }
+
+    function parseLinks(file) {
+      const folderKey = file.dataset.folder;
+      const folderTranslation = translations[currentLanguage].folders[folderKey];
+
+      if (folderTranslation && Array.isArray(folderTranslation.links)) {
+        return folderTranslation.links;
+      }
+
+      try {
+        const links = JSON.parse(file.dataset.links || '[]');
+        return Array.isArray(links) ? links : [];
+      } catch (error) {
+        return [];
+      }
+    }
+
+    function getFolderContent(file) {
+      const folderKey = file.dataset.folder;
+      const folderTranslation = translations[currentLanguage].folders[folderKey];
+
+      return {
+        title: folderTranslation?.title || file.dataset.title || 'Untitled',
+        text: folderTranslation?.text || file.dataset.text || '',
+        links: parseLinks(file)
+      };
+    }
+
+    function applyLanguage(language) {
+      currentLanguage = language;
+      const dictionary = translations[currentLanguage];
+
+      document.documentElement.lang = dictionary.htmlLang;
+      document.title = dictionary.pageTitle;
+      document.querySelector('meta[name="description"]')?.setAttribute('content', dictionary.metaDescription);
+
+      document.querySelectorAll('[data-i18n]').forEach(element => {
+        const key = element.dataset.i18n;
+        if (dictionary[key] !== undefined) {
+          element.innerHTML = dictionary[key];
+        }
+      });
+
+      document.querySelectorAll('[data-i18n-aria]').forEach(element => {
+        const key = element.dataset.i18nAria;
+        if (dictionary[key] !== undefined) {
+          element.setAttribute('aria-label', dictionary[key]);
+        }
+      });
+
+      files.forEach(file => {
+        const content = getFolderContent(file);
+        file.dataset.title = content.title;
+        file.dataset.text = content.text;
+      });
+
+      gridBtn.textContent = isGrid ? dictionary.grid : dictionary.list;
+      shareBtn.textContent = dictionary.share;
+      languageBtn.textContent = dictionary.languageButton;
+      openWindow.textContent = dictionary.openWindowButton;
+
+      if (modal.classList.contains('open') && activeFolderKey) {
+        const activeFile = files.find(file => file.dataset.folder === activeFolderKey);
+        if (activeFile) openModal(activeFile);
+      } else if (openFolder.classList.contains('visible')) {
+        openFolder.textContent = `${dictionary.openFolderPrefix}${activeFolderTitle}`;
+      }
+    }
+
+    function toggleLanguage() {
+      applyLanguage(currentLanguage === 'ru' ? 'en' : 'ru');
+    }
+
+    function openModal(file) {
+      files.forEach(item => item.classList.remove('selected'));
+
+      const content = getFolderContent(file);
+      const title = content.title;
+      const text = content.text;
+      const links = content.links;
+
+      activeFolderTitle = title;
+      activeFolderKey = file.dataset.folder || null;
+      modalTitle.textContent = title;
+      folderTitlebar.textContent = title;
+      openFolder.textContent = `${translations[currentLanguage].openFolderPrefix}${title}`;
+      modalText.textContent = text;
+      modalLinks.replaceChildren();
+
+      if (!links.length) {
+        modalLinks.appendChild(createEmptyRow());
+      }
+
+      links.forEach(link => {
+        modalLinks.appendChild(createLinkRow(link));
+      });
+
+      modal.classList.remove('minimized', 'fullscreen');
+      openFolder.classList.remove('visible');
+      modal.classList.add('open');
+    }
+
+    function clearFileSelection() {
+      files.forEach(file => {
+        file.classList.remove('selected');
+        file.blur();
+      });
+    }
+
+    function closeModal() {
+      modal.classList.remove('open', 'minimized', 'fullscreen');
+      openFolder.classList.remove('visible');
+      clearFileSelection();
+    }
+
+    function minimizeModal() {
+      if (!modal.classList.contains('open')) return;
+      modal.classList.add('minimized');
+      modal.classList.remove('fullscreen');
+      openFolder.textContent = `${translations[currentLanguage].openFolderPrefix}${activeFolderTitle}`;
+      openFolder.classList.add('visible');
+    }
+
+    function restoreModal() {
+      modal.classList.add('open');
+      modal.classList.remove('minimized');
+      openFolder.classList.remove('visible');
+    }
+
+    function toggleModalFullscreen() {
+      if (!modal.classList.contains('open')) return;
+      modal.classList.toggle('fullscreen');
+    }
+
+    function showDockButton() {
+      openWindow.classList.add('visible');
+    }
+
+    function hideDockButton() {
+      openWindow.classList.remove('visible');
+    }
+
+    function restoreWindow() {
+      finderWindow.classList.remove('closed', 'minimized');
+      hideDockButton();
+    }
+
+    function setFilteredFiles(filter) {
+      files.forEach(file => {
+        const show = filter === 'all' || file.dataset.type === filter;
+        file.hidden = !show;
+      });
+    }
+
+    function toggleGridView() {
+      isGrid = !isGrid;
+      grid.classList.toggle('list-view', !isGrid);
+      gridBtn.textContent = isGrid ? translations[currentLanguage].grid : translations[currentLanguage].list;
+      gridBtn.setAttribute('aria-pressed', String(isGrid));
+    }
+
+    function resetShareLabel() {
+      shareBtn.textContent = translations[currentLanguage].share;
+    }
+
+    async function copyToClipboard(text) {
+      if (navigator.clipboard && window.isSecureContext) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.setAttribute('readonly', '');
+      textarea.style.position = 'fixed';
+      textarea.style.top = '-999px';
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand('copy');
+      textarea.remove();
+      return copied;
+    }
+
+    async function sharePage() {
+      const url = window.location.href;
+
+      if (navigator.share) {
+        try {
+          await navigator.share({ title: document.title, url });
+          return;
+        } catch (error) {
+          if (error.name === 'AbortError') return;
+        }
+      }
+
+      try {
+        const copied = await copyToClipboard(url);
+        shareBtn.textContent = copied ? translations[currentLanguage].copied : translations[currentLanguage].copyFailed;
+        setTimeout(resetShareLabel, 1500);
+      } catch (error) {
+        shareBtn.textContent = translations[currentLanguage].copyFailed;
+        setTimeout(resetShareLabel, 1500);
+      }
+    }
+
+    closeWindow.addEventListener('click', () => {
+      finderWindow.classList.remove('minimized', 'fullscreen');
+      finderWindow.classList.add('closed');
+      closeModal();
+      showDockButton();
+    });
+
+    minimizeWindow.addEventListener('click', () => {
+      finderWindow.classList.remove('closed', 'fullscreen');
+      finderWindow.classList.add('minimized');
+      showDockButton();
+    });
+
+    fullscreenWindow.addEventListener('click', () => {
+      finderWindow.classList.toggle('fullscreen');
+    });
+
+    openWindow.addEventListener('click', restoreWindow);
+
+    files.forEach(file => {
+      file.addEventListener('click', () => openModal(file));
+    });
+
+    closeFolder.addEventListener('click', closeModal);
+    minimizeFolder.addEventListener('click', minimizeModal);
+    fullscreenFolder.addEventListener('click', toggleModalFullscreen);
+    openFolder.addEventListener('click', restoreModal);
+
+    modal.addEventListener('click', event => {
+      if (event.target === modal && !modal.classList.contains('minimized')) {
+        closeModal();
+      }
+    });
+
+    window.addEventListener('keydown', event => {
+      if (event.key === 'Escape') {
+        closeModal();
+      }
+    });
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navItems.forEach(nav => nav.classList.remove('active'));
+        item.classList.add('active');
+        setFilteredFiles(item.dataset.filter || 'all');
+      });
+    });
+
+    gridBtn.addEventListener('click', toggleGridView);
+    shareBtn.addEventListener('click', sharePage);
+    languageBtn.addEventListener('click', toggleLanguage);
+
+    applyLanguage(currentLanguage);
+
+    if (isLocalDebug()) {
+      runSmokeTests();
+    }
+  </script>
+</body>
+</html>

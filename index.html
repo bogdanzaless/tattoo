@@ -589,9 +589,14 @@
       letter-spacing: -0.05em;
     }
 
+    .folder-summary {
+      max-width: 520px;
+      padding: 2px 2px 0;
+    }
+
     .folder-summary p,
     .modal-body p {
-      margin: 0 0 2px;
+      margin: 0;
       color: var(--muted);
       line-height: 1.5;
     }
@@ -602,7 +607,7 @@
       grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
       gap: 16px;
       min-height: 0;
-      margin-top: 32px;
+      margin-top: 34px;
     }
 
     .folder-link {
@@ -936,7 +941,7 @@
       }
 
       .modal.folder-window .modal-body {
-        padding: 18px 14px max(24px, env(safe-area-inset-bottom));
+        padding: 20px 18px max(24px, env(safe-area-inset-bottom));
       }
 
       .modal.editor-window .modal-body {
@@ -950,7 +955,7 @@
       .folder-items {
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
-        margin-top: 28px;
+        margin-top: 30px;
       }
 
       .link-icon {

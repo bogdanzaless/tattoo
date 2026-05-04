@@ -75,6 +75,18 @@
       to { transform: translate3d(2%, 2%, 0) scale(1.08); }
     }
 
+    @keyframes windowOpen {
+      0% { opacity: 0; transform: translateY(28px) scale(.86); }
+      68% { opacity: 1; transform: translateY(-2px) scale(1.012); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes modalOpen {
+      0% { opacity: 0; transform: translateY(24px) scale(.9); }
+      72% { opacity: 1; transform: translateY(-2px) scale(1.01); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
     .page {
       min-height: 100svh;
       padding: max(22px, env(safe-area-inset-top)) 18px max(22px, env(safe-area-inset-bottom));
@@ -97,14 +109,23 @@
       backdrop-filter: blur(34px) saturate(1.35);
       -webkit-backdrop-filter: blur(34px) saturate(1.35);
       transform-origin: bottom center;
-      transition: transform .34s ease, opacity .28s ease, width .34s ease, height .34s ease, border-radius .34s ease;
+      transition: transform .46s cubic-bezier(.2, .9, .2, 1), opacity .28s ease, width .34s ease, height .34s ease, border-radius .34s ease, box-shadow .34s ease;
     }
 
-    .finder.closed,
+    .finder.closed {
+      opacity: 0;
+      transform: translateY(12px) scale(.84);
+      pointer-events: none;
+    }
+
     .finder.minimized {
       opacity: 0;
-      transform: translateY(28px) scale(.92);
+      transform: translateY(48px) scale(.36);
       pointer-events: none;
+    }
+
+    .finder.opening {
+      animation: windowOpen .48s cubic-bezier(.18, .9, .22, 1) both;
     }
 
     .finder.fullscreen {
@@ -240,13 +261,16 @@
       width: 46px;
       height: 46px;
       border-radius: 15px;
-      background: linear-gradient(135deg, #111, #555);
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-weight: 800;
-      letter-spacing: -0.04em;
+      overflow: hidden;
       flex: 0 0 auto;
+      background: #111;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .name { font-weight: 760; line-height: 1.1; }
@@ -457,6 +481,10 @@
 
     .modal.open { display: grid; }
 
+    .modal.opening .modal-card {
+      animation: modalOpen .42s cubic-bezier(.18, .9, .22, 1) both;
+    }
+
     .modal-card {
       width: min(560px, 100%);
       max-height: calc(100svh - 36px);
@@ -468,7 +496,7 @@
       box-shadow: var(--shadow);
       overflow: hidden;
       transform-origin: bottom center;
-      transition: transform .34s ease, opacity .28s ease, width .34s ease, height .34s ease, border-radius .34s ease;
+      transition: transform .46s cubic-bezier(.2, .9, .2, 1), opacity .28s ease, width .34s ease, height .34s ease, border-radius .34s ease, box-shadow .34s ease;
       display: grid;
       grid-template-rows: auto minmax(0, 1fr);
     }
@@ -480,7 +508,13 @@
 
     .modal.minimized .modal-card {
       opacity: 0;
-      transform: translateY(28px) scale(.92);
+      transform: translateY(54px) scale(.42);
+      pointer-events: none;
+    }
+
+    .modal.closing .modal-card {
+      opacity: 0;
+      transform: translateY(12px) scale(.86);
       pointer-events: none;
     }
 
@@ -533,10 +567,19 @@
       grid-template-rows: minmax(0,1fr);
     }
 
+    .modal.preview-window .modal-body {
+      padding: 0;
+      background: rgba(18, 19, 24, .32);
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+    }
+
     .modal.folder-window #modalTitle,
     .modal.folder-window #modalText,
     .modal.editor-window #modalTitle,
-    .modal.editor-window #modalText {
+    .modal.editor-window #modalText,
+    .modal.preview-window #modalTitle,
+    .modal.preview-window #modalText {
       display: none;
     }
 
@@ -664,6 +707,31 @@
       font: 15px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       outline: none;
       user-select: text;
+    }
+
+    .preview-shell {
+      width: 100%;
+      height: 100%;
+      min-height: 320px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        linear-gradient(45deg, rgba(255,255,255,.08) 25%, transparent 25%),
+        linear-gradient(-45deg, rgba(255,255,255,.08) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, rgba(255,255,255,.08) 75%),
+        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,.08) 75%);
+      background-size: 28px 28px;
+      background-position: 0 0, 0 14px, 14px -14px, -14px 0;
+    }
+
+    .preview-image {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 18px;
+      box-shadow: 0 24px 70px rgba(0,0,0,.32);
+      background: rgba(255,255,255,.08);
     }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
@@ -849,7 +917,8 @@
         min-height: min(360px, calc(100svh - 24px));
       }
 
-      .modal.editor-window .modal-card {
+      .modal.editor-window .modal-card,
+      .modal.preview-window .modal-card {
         height: min(560px, calc(100svh - 24px));
       }
 
@@ -872,6 +941,10 @@
 
       .modal.editor-window .modal-body {
         padding: 14px;
+      }
+
+      .modal.preview-window .modal-body {
+        padding: 0;
       }
 
       .folder-items {
@@ -978,7 +1051,8 @@
         min-height: min(340px, calc(100svh - 24px));
       }
 
-      .modal.editor-window .modal-card {
+      .modal.editor-window .modal-card,
+      .modal.preview-window .modal-card {
         height: min(520px, calc(100svh - 24px));
       }
 
@@ -1110,6 +1184,11 @@
         scroll-behavior: auto !important;
         transition-duration: .01ms !important;
       }
+
+      .finder.opening,
+      .modal.opening .modal-card {
+        animation: none !important;
+      }
     }
   </style>
 </head>
@@ -1133,7 +1212,7 @@
       <div class="content">
         <aside class="sidebar">
           <div class="profile-mini">
-            <div class="avatar">B</div>
+            <div class="avatar"><img src="avatar.png" alt="Avatar"></div>
             <div>
               <div class="name" data-i18n="sidebarName">Bogdan</div>
               <div class="tag" data-i18n="sidebarTag">Creative Director</div>
@@ -1159,6 +1238,10 @@
           </div>
 
           <div class="grid" id="grid">
+            <button class="file" data-type="work" data-folder="avatar" data-title="avatar.png" data-text="Моя аватарка." data-links='[]'>
+              <span class="icon fileicon">🖼️</span>
+              <span class="filename">avatar.png</span>
+            </button>
             <button class="file" data-type="links" data-folder="social" data-title="Соцсети" data-text="Все основные способы связаться со мной и следить за моими работами." data-links='[{"label":"Telegram","url":"https://t.me/bogdan_zaless"},{"label":"Instagram","url":"https://www.instagram.com/bogdan_zaless"}]'>
               <span class="icon">📁</span>
               <span class="filename" data-i18n="fileSocial">Соцсети</span>
@@ -1513,7 +1596,7 @@
 
     function renderEditorContent(title, text) {
       modal.classList.add('editor-window');
-      modal.classList.remove('folder-window');
+      modal.classList.remove('folder-window', 'preview-window');
       modalLinks.replaceChildren();
 
       const shell = document.createElement('div');
@@ -1532,6 +1615,23 @@
       modalLinks.appendChild(shell);
     }
 
+    function renderPreviewContent(title, src) {
+      modal.classList.add('preview-window');
+      modal.classList.remove('folder-window', 'editor-window');
+      modalLinks.replaceChildren();
+
+      const shell = document.createElement('div');
+      shell.className = 'preview-shell';
+
+      const image = document.createElement('img');
+      image.className = 'preview-image';
+      image.src = src;
+      image.alt = title;
+
+      shell.appendChild(image);
+      modalLinks.appendChild(shell);
+    }
+
     function openModal(file) {
       files.forEach(item => item.classList.remove('selected'));
 
@@ -1540,6 +1640,7 @@
       const text = content.text;
       const links = content.links;
       const isTextFile = file.dataset.folder === 'about' || title.toLowerCase().endsWith('.txt');
+      const isImageFile = /\.(png|jpe?g|webp|gif|svg)$/i.test(title);
 
       activeFolderTitle = title;
       activeFolderKey = file.dataset.folder || null;
@@ -1548,15 +1649,18 @@
       openFolder.textContent = `${translations[currentLanguage].openFolderPrefix}${title}`;
       modalText.textContent = '';
 
-      if (isTextFile) {
+      if (isImageFile) {
+        renderPreviewContent(title, title);
+      } else if (isTextFile) {
         renderEditorContent(title, text);
       } else {
         renderFolderContent(title, text, links);
       }
 
-      modal.classList.remove('minimized', 'fullscreen');
+      modal.classList.remove('minimized', 'fullscreen', 'closing', 'opening');
       openFolder.classList.remove('visible');
       modal.classList.add('open');
+      playModalOpeningAnimation();
     }
 
     function clearFileSelection() {
@@ -1567,9 +1671,19 @@
     }
 
     function closeModal() {
-      modal.classList.remove('open', 'minimized', 'fullscreen');
-      openFolder.classList.remove('visible');
-      clearFileSelection();
+      if (!modal.classList.contains('open')) {
+        modal.classList.remove('minimized', 'fullscreen', 'closing');
+        openFolder.classList.remove('visible');
+        clearFileSelection();
+        return;
+      }
+
+      modal.classList.add('closing');
+      window.setTimeout(() => {
+        modal.classList.remove('open', 'minimized', 'fullscreen', 'closing', 'opening');
+        openFolder.classList.remove('visible');
+        clearFileSelection();
+      }, 220);
     }
 
     function minimizeModal() {
@@ -1583,10 +1697,11 @@
 
     function restoreModal() {
       modal.classList.add('open');
-      modal.classList.remove('minimized');
+      modal.classList.remove('minimized', 'closing', 'opening');
       if (wasModalFullscreen) {
         modal.classList.add('fullscreen');
       }
+      playModalOpeningAnimation();
       openFolder.classList.remove('visible');
     }
 
@@ -1603,11 +1718,26 @@
       openWindow.classList.remove('visible');
     }
 
+    function playOpeningAnimation(element) {
+      element.classList.remove('opening');
+      void element.offsetWidth;
+      element.classList.add('opening');
+      window.setTimeout(() => element.classList.remove('opening'), 520);
+    }
+
+    function playModalOpeningAnimation() {
+      modal.classList.remove('opening');
+      void modal.offsetWidth;
+      modal.classList.add('opening');
+      window.setTimeout(() => modal.classList.remove('opening'), 460);
+    }
+
     function restoreWindow() {
       finderWindow.classList.remove('closed', 'minimized');
       if (wasWindowFullscreen) {
         finderWindow.classList.add('fullscreen');
       }
+      playOpeningAnimation(finderWindow);
       hideDockButton();
     }
 
@@ -1670,7 +1800,8 @@
     }
 
     closeWindow.addEventListener('click', () => {
-      finderWindow.classList.remove('minimized', 'fullscreen');
+      wasWindowFullscreen = false;
+      finderWindow.classList.remove('minimized', 'fullscreen', 'opening');
       finderWindow.classList.add('closed');
       closeModal();
       showDockButton();
@@ -1678,7 +1809,7 @@
 
     minimizeWindow.addEventListener('click', () => {
       wasWindowFullscreen = finderWindow.classList.contains('fullscreen');
-      finderWindow.classList.remove('closed', 'fullscreen');
+      finderWindow.classList.remove('closed', 'fullscreen', 'opening');
       finderWindow.classList.add('minimized');
       showDockButton();
     });

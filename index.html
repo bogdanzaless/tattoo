@@ -357,15 +357,15 @@
       grid-template-columns: auto 1fr;
       align-items: center;
       text-align: left;
-      gap: 15px;
+      gap: 12px;
       min-height: auto;
     }
 
     .grid.list-view .icon {
-      width: 64px;
-      height: 52px;
+      width: 66px;
+      height: 56px;
       margin: 0;
-      font-size: 24px;
+      font-size: 30px;
     }
 
     .file[hidden] {
@@ -412,9 +412,30 @@
     }
 
     .icon.fileicon { background: linear-gradient(180deg, #ffffff, #dfe4ee); color: #111; }
+    
+    .file[data-title$=".txt"] .icon {
+      background: linear-gradient(180deg, #ffffff, #e9edf5);
+      box-shadow: 0 8px 18px rgba(0,0,0,.12);
+      color: #111;
+    }
+
+    .file[data-title$=".txt"] .filename {
+      font-weight: 500;
+      opacity: .85;
+    }
+
+    .file[data-title$=".pdf"] .icon {
+      background: linear-gradient(180deg, #ff7b7b, #d51f32);
+      box-shadow: 0 10px 22px rgba(213,31,50,.25);
+    }
+
+    .file[data-title$=".pdf"] .filename {
+      font-weight: 600;
+    }
     .icon.black { background: linear-gradient(180deg, #2a2b31, #090a0d); }
     .icon.orange { background: linear-gradient(180deg, #ffd088, #ff8a1d); }
     .icon.purple { background: linear-gradient(180deg, #d8adff, #8f42ff); }
+    .icon.pdf { background: linear-gradient(180deg, #ff7b7b, #d51f32); color: #fff; }
 
     .filename {
       display: block;
@@ -500,29 +521,147 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .modal-body h2 { margin: 0 0 8px; font-size: 28px; letter-spacing: -0.05em; }
-    .modal-body p { margin: 0 0 18px; color: var(--muted); line-height: 1.5; }
-
-    .links {
-      display: grid;
-      gap: 10px;
+    .modal.folder-window .modal-body {
+      padding: 22px;
+      display: block;
     }
 
-    .link {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding: 14px 15px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.55);
-      border: 1px solid var(--line);
+    .modal.editor-window .modal-body {
+      padding: 18px;
+      background: rgba(255,255,255,.42);
+    }
+
+    .modal.folder-window #modalTitle,
+    .modal.folder-window #modalText,
+    .modal.editor-window #modalTitle,
+    .modal.editor-window #modalText {
+      display: none;
+    }
+
+    .modal-body h2 {
+      margin: 0 0 8px;
+      font-size: 28px;
+      letter-spacing: -0.05em;
+    }
+
+    .folder-summary p,
+    .modal-body p {
+      margin: 0 0 2px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .folder-items {
+      align-content: start;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
+      gap: 16px;
+      min-height: 0;
+      margin-top: 32px;
+    }
+
+    .folder-link {
+      min-width: 0;
+      border: 1px solid transparent;
+      border-radius: 18px;
+      padding: 12px 8px 10px;
+      background: transparent;
       color: inherit;
+      cursor: pointer;
+      text-align: center;
       text-decoration: none;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+      font: inherit;
+    }
+
+    .folder-link:hover,
+    .folder-link:focus-visible {
+      transform: translateY(-2px);
+      background: rgba(255,255,255,.38);
+      border-color: var(--line);
+      outline: none;
+    }
+
+    .folder-link:active {
+      transform: scale(.98);
+      background: rgba(255,255,255,.46);
+    }
+
+    .link-icon {
+      width: 64px;
+      height: 56px;
+      margin: 0 auto 10px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff, #dfe4ee);
+      box-shadow: 0 10px 22px rgba(0,0,0,.14);
+      color: #111;
+      font-size: 29px;
+    }
+
+    .link-icon.telegram { background: linear-gradient(180deg, #68c7ff, #168add); color: #fff; }
+    .link-icon.instagram { background: linear-gradient(135deg, #ffd36b, #ff4f8b 48%, #7b61ff); color: #fff; }
+    .link-icon.email { background: linear-gradient(180deg, #ffffff, #dfe4ee); color: #111; }
+    .link-icon.placeholder { background: linear-gradient(180deg, #e8ebf2, #cdd3df); color: #555; }
+
+    .folder-link-name {
+      display: block;
+      font-size: 13px;
+      font-weight: 620;
+      line-height: 1.2;
+      overflow-wrap: anywhere;
+    }
+
+    .empty-folder {
+      border: 1px dashed var(--line);
+      border-radius: 18px;
+      padding: 18px;
+      color: var(--muted);
+      background: rgba(255,255,255,.22);
+    }
+
+    .editor-shell {
+      height: 100%;
+      display: grid;
+      grid-template-rows: minmax(0, 1fr);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(255,255,255,.62);
+    }
+
+    .editor-toolbar {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
       font-weight: 650;
     }
 
-    .link span { color: var(--muted); font-weight: 500; }
+    .readonly-badge {
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 5px 9px;
+      background: rgba(255,255,255,.46);
+      white-space: nowrap;
+    }
+
+    .editor-paper {
+      margin: 0;
+      padding: 28px;
+      overflow: auto;
+      white-space: pre-wrap;
+      color: var(--text);
+      font: 15px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      outline: none;
+      user-select: text;
+    }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
       .finder { background: var(--window-solid); }
@@ -538,8 +677,12 @@
       .sidebar { background: rgba(255,255,255,.035); border-color: var(--line-dark); }
       .tag, .lead, .nav-title, .status-card span, .toolbar-actions, .modal-titlebar, .modal-body p, .link span { color: var(--muted-dark); }
       .nav-item { color: var(--text-dark); }
-      .pill, .status-card, .file:hover, .file:focus-visible, .modal-card, .link { border-color: var(--line-dark); background: rgba(255,255,255,.08); }
+      .pill, .status-card, .file:hover, .file:focus-visible, .modal-card, .folder-link:hover, .folder-link:focus-visible, .empty-folder, .readonly-badge, .editor-shell { border-color: var(--line-dark); background: rgba(255,255,255,.08); }
       .modal-card { color: var(--text-dark); }
+      .modal.editor-window .modal-body, .editor-shell { background: rgba(20, 22, 28, .78); }
+      .editor-paper { color: var(--text-dark); }
+      .link-icon.email { color: #111; }
+      .folder-summary p, .empty-folder, .editor-toolbar { color: var(--muted-dark); }
       .dock-open, .folder-dock-open { background: rgba(24, 26, 32, 0.82); color: var(--text-dark); border-color: var(--line-dark); }
     }
 
@@ -712,6 +855,31 @@
         padding: 22px 16px max(24px, env(safe-area-inset-bottom));
       }
 
+      .modal.folder-window .modal-body {
+        padding: 18px 14px max(24px, env(safe-area-inset-bottom));
+      }
+
+      .modal.editor-window .modal-body {
+        padding: 14px;
+      }
+
+      .folder-items {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 28px;
+      }
+
+      .link-icon {
+        width: 58px;
+        height: 50px;
+        font-size: 25px;
+      }
+
+      .editor-paper {
+        padding: 22px 16px max(24px, env(safe-area-inset-bottom));
+        font-size: 14px;
+      }
+
       .modal-body h2 {
         font-size: 30px;
         line-height: 1;
@@ -859,6 +1027,10 @@
         width: 62px;
         height: 52px;
       }
+
+      .folder-items {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
     }
 
     @media (max-width: 360px) {
@@ -968,7 +1140,7 @@
           </div>
 
           <div class="grid" id="grid">
-            <button class="file" data-type="links" data-folder="social" data-title="Соцсети" data-text="Все основные способы связаться со мной и следить за моими работами." data-links='[{"label":"Telegram Channel","url":"https://t.me/+NnfV7IrG7Tk1MTky"},{"label":"Instagram","url":"https://www.instagram.com/bogdan_zaless"}]'>
+            <button class="file" data-type="links" data-folder="social" data-title="Соцсети" data-text="Все основные способы связаться со мной и следить за моими работами." data-links='[{"label":"Telegram","url":"https://t.me/bogdan_zaless"},{"label":"Instagram","url":"https://www.instagram.com/bogdan_zaless"}]'>
               <span class="icon">📁</span>
               <span class="filename" data-i18n="fileSocial">Соцсети</span>
             </button>
@@ -983,9 +1155,9 @@
               <span class="filename" data-i18n="fileContacts">Контакты</span>
             </button>
 
-            <button class="file" data-type="work" data-folder="about" data-title="Обо мне" data-text="Уже много лет работаю в сфере креатива, маркетинга и дизайна: от визуальных концепций до текстов и идей спец. проектов. Обожаю проекты с характером и смыслом, когда есть не только форма, но и сильная идея." data-links='[]'>
+            <button class="file" data-type="work" data-folder="about" data-title="about.txt" data-text="Уже много лет работаю в сфере креатива, маркетинга и дизайна: от визуальных концепций до текстов и идей спец. проектов. Обожаю проекты с характером и смыслом, когда есть не только форма, но и сильная идея." data-links='[]'>
               <span class="icon fileicon">📄</span>
-              <span class="filename" data-i18n="fileAbout">Обо мне</span>
+              <span class="filename" data-i18n="fileAbout">about.txt</span>
             </button>
 
             
@@ -1069,7 +1241,7 @@
         fileSocial: 'Соцсети',
         filePortfolio: 'Портфолио',
         fileContacts: 'Контакты',
-        fileAbout: 'Обо мне',
+        fileAbout: 'about.txt',
         fileQr: 'QR Code',
         openWindowButton: '📁 Открыть Finder',
         openFolderPrefix: '📂 Открыть ',
@@ -1093,7 +1265,7 @@
           social: { title: 'Соцсети', text: 'Все основные способы связаться со мной и следить за моими работами.' },
           portfolio: { title: 'Портфолио', text: 'Подборка моих работ, кейсов и проектов.', links: [{ label: 'Скоро здесь', url: '#' }] },
           contacts: { title: 'Контакты', text: 'Связаться со мной напрямую — самый быстрый способ обсудить проект.' },
-          about: { title: 'Обо мне', text: 'Уже много лет работаю в сфере креатива, маркетинга и дизайна: от визуальных концепций до текстов и идей спец. проектов. Обожаю проекты с характером и смыслом, когда есть не только форма, но и сильная идея.', links: [] },
+          about: { title: 'about.txt', text: 'Уже много лет работаю в сфере креатива, маркетинга и дизайна: от визуальных концепций до текстов и идей спец. проектов. Обожаю проекты с характером и смыслом, когда есть не только форма, но и сильная идея.', links: [] },
           qr: { title: 'QR Code', text: 'Здесь позже появится QR-код или быстрый доступ к дополнительным материалам.', links: [] }
         }
       },
@@ -1114,7 +1286,7 @@
         fileSocial: 'Socials',
         filePortfolio: 'Portfolio',
         fileContacts: 'Contacts',
-        fileAbout: 'About me',
+        fileAbout: 'about.txt',
         fileQr: 'QR Code',
         openWindowButton: '📁 Open Finder',
         openFolderPrefix: '📂 Open ',
@@ -1138,7 +1310,7 @@
           social: { title: 'Socials', text: 'The main ways to contact me and follow my work.' },
           portfolio: { title: 'Portfolio', text: 'A selection of my work, cases, and projects.', links: [{ label: 'Coming soon', url: '#' }] },
           contacts: { title: 'Contacts', text: 'The fastest way to reach me and discuss a project.' },
-          about: { title: 'About me', text: 'I have been working in creativity, marketing, and design for years: from visual concepts to copy and ideas for special projects. I love projects with character and meaning — projects where there is not only form, but also a strong idea.', links: [] },
+          about: { title: 'about.txt', text: 'I have been working in creativity, marketing, and design for years: from visual concepts to copy and ideas for special projects. I love projects with character and meaning — projects where there is not only form, but also a strong idea.', links: [] },
           qr: { title: 'QR Code', text: 'A QR code or quick access to extra materials will appear here later.', links: [] }
         }
       }
@@ -1190,22 +1362,36 @@
       return element;
     }
 
+    function getLinkIcon(link) {
+      const label = `${link.label || ''} ${link.url || ''}`.toLowerCase();
+      if (label.includes('telegram') || label.includes('t.me')) return { icon: '✈️', className: 'telegram' };
+      if (label.includes('instagram')) return { icon: '◎', className: 'instagram' };
+      if (label.includes('email') || label.includes('mailto:')) return { icon: '✉️', className: 'email' };
+      return { icon: '↗', className: 'placeholder' };
+    }
+
     function createLinkRow(link) {
       const a = document.createElement('a');
-      a.className = 'link';
+      const iconData = getLinkIcon(link);
+      a.className = 'folder-link';
       a.href = link.url || '#';
       a.target = '_blank';
       a.rel = 'noopener noreferrer';
-      appendTextElement(a, 'strong', link.label || 'Link');
-      appendTextElement(a, 'span', '↗');
+
+      const icon = document.createElement('span');
+      icon.className = `link-icon ${iconData.className}`;
+      icon.textContent = iconData.icon;
+      a.appendChild(icon);
+
+      appendTextElement(a, 'span', link.label || 'Link').className = 'folder-link-name';
       return a;
     }
 
     function createEmptyRow() {
       const empty = document.createElement('div');
-      empty.className = 'link';
+      empty.className = 'empty-folder';
       appendTextElement(empty, 'strong', translations[currentLanguage].previewOnly);
-      appendTextElement(empty, 'span', translations[currentLanguage].noLinks);
+      appendTextElement(empty, 'span', ` — ${translations[currentLanguage].noLinks}`);
       return empty;
     }
 
@@ -1281,6 +1467,50 @@
       applyLanguage(currentLanguage === 'ru' ? 'en' : 'ru');
     }
 
+    function renderFolderContent(title, text, links) {
+      modal.classList.add('folder-window');
+      modal.classList.remove('editor-window');
+      modalLinks.replaceChildren();
+
+      const summary = document.createElement('div');
+      summary.className = 'folder-summary';
+      appendTextElement(summary, 'p', text);
+
+      const items = document.createElement('div');
+      items.className = 'folder-items';
+
+      if (!links.length) {
+        items.appendChild(createEmptyRow());
+      }
+
+      links.forEach(link => {
+        items.appendChild(createLinkRow(link));
+      });
+
+      modalLinks.append(summary, items);
+    }
+
+    function renderEditorContent(title, text) {
+      modal.classList.add('editor-window');
+      modal.classList.remove('folder-window');
+      modalLinks.replaceChildren();
+
+      const shell = document.createElement('div');
+      shell.className = 'editor-shell';
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'editor-toolbar';
+      appendTextElement(toolbar, 'span', translations[currentLanguage].previewOnly);
+
+      const paper = document.createElement('pre');
+      paper.className = 'editor-paper';
+      paper.setAttribute('aria-readonly', 'true');
+      paper.textContent = text;
+
+      shell.append(toolbar, paper);
+      modalLinks.appendChild(shell);
+    }
+
     function openModal(file) {
       files.forEach(item => item.classList.remove('selected'));
 
@@ -1288,22 +1518,20 @@
       const title = content.title;
       const text = content.text;
       const links = content.links;
+      const isTextFile = file.dataset.folder === 'about' || title.toLowerCase().endsWith('.txt');
 
       activeFolderTitle = title;
       activeFolderKey = file.dataset.folder || null;
       modalTitle.textContent = title;
       folderTitlebar.textContent = title;
       openFolder.textContent = `${translations[currentLanguage].openFolderPrefix}${title}`;
-      modalText.textContent = text;
-      modalLinks.replaceChildren();
+      modalText.textContent = '';
 
-      if (!links.length) {
-        modalLinks.appendChild(createEmptyRow());
+      if (isTextFile) {
+        renderEditorContent(title, text);
+      } else {
+        renderFolderContent(title, text, links);
       }
-
-      links.forEach(link => {
-        modalLinks.appendChild(createLinkRow(link));
-      });
 
       modal.classList.remove('minimized', 'fullscreen');
       openFolder.classList.remove('visible');

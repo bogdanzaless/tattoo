@@ -1241,6 +1241,8 @@
     let currentLanguage = 'ru';
     let activeFolderTitle = 'папку';
     let activeFolderKey = null;
+    let wasWindowFullscreen = false;
+    let wasModalFullscreen = false;
 
     const translations = {
       ru: {
@@ -1572,6 +1574,7 @@
 
     function minimizeModal() {
       if (!modal.classList.contains('open')) return;
+      wasModalFullscreen = modal.classList.contains('fullscreen');
       modal.classList.add('minimized');
       modal.classList.remove('fullscreen');
       openFolder.textContent = `${translations[currentLanguage].openFolderPrefix}${activeFolderTitle}`;
@@ -1581,6 +1584,9 @@
     function restoreModal() {
       modal.classList.add('open');
       modal.classList.remove('minimized');
+      if (wasModalFullscreen) {
+        modal.classList.add('fullscreen');
+      }
       openFolder.classList.remove('visible');
     }
 
@@ -1599,6 +1605,9 @@
 
     function restoreWindow() {
       finderWindow.classList.remove('closed', 'minimized');
+      if (wasWindowFullscreen) {
+        finderWindow.classList.add('fullscreen');
+      }
       hideDockButton();
     }
 
@@ -1668,6 +1677,7 @@
     });
 
     minimizeWindow.addEventListener('click', () => {
+      wasWindowFullscreen = finderWindow.classList.contains('fullscreen');
       finderWindow.classList.remove('closed', 'fullscreen');
       finderWindow.classList.add('minimized');
       showDockButton();

@@ -1,1868 +1,1212 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en" id="htmlRoot" class="dark">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Bogdan Zalessky</title>
-  <meta name="description" content="Creative portfolio and contacts of Bogdan Zalessky" />
-  <style>
-    :root {
-      --bg: #0d0f14;
-      --window: rgba(245, 245, 247, 0.86);
-      --window-solid: rgba(245, 245, 247, 0.96);
-      --window-dark: rgba(24, 26, 32, 0.76);
-      --window-dark-solid: rgba(24, 26, 32, 0.96);
-      --line: rgba(0, 0, 0, 0.12);
-      --line-dark: rgba(255, 255, 255, 0.12);
-      --text: #15161a;
-      --muted: rgba(21, 22, 26, 0.58);
-      --text-dark: #f4f4f5;
-      --muted-dark: rgba(244, 244, 245, 0.62);
-      --accent: #0a84ff;
-      --radius: 22px;
-      --shadow: 0 30px 90px rgba(0, 0, 0, 0.42);
-    }
-
-    * { box-sizing: border-box; }
-
-    html {
-      width: 100%;
-      min-height: 100%;
-      background: var(--bg);
-      -webkit-text-size-adjust: 100%;
-    }
-
-    body {
-      margin: 0;
-      width: 100%;
-      min-height: 100%;
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
-      color: var(--text);
-      background: var(--bg);
-      overflow-x: hidden;
-      overscroll-behavior: none;
-    }
-
-    button,
-    a {
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body::before,
-    body::after {
-      content: "";
-      position: fixed;
-      inset: -20%;
-      z-index: -2;
-      background:
-        radial-gradient(circle at 16% 18%, rgba(74, 144, 255, 0.55), transparent 28%),
-        radial-gradient(circle at 78% 22%, rgba(190, 92, 255, 0.40), transparent 30%),
-        radial-gradient(circle at 52% 85%, rgba(255, 198, 92, 0.36), transparent 30%),
-        linear-gradient(135deg, #07080d 0%, #171927 50%, #07080d 100%);
-      animation: drift 18s ease-in-out infinite alternate;
-    }
-
-    body::after {
-      z-index: -1;
-      opacity: 0.38;
-      filter: blur(50px);
-      animation-duration: 24s;
-      animation-direction: alternate-reverse;
-    }
-
-    @keyframes drift {
-      from { transform: translate3d(-2%, -1%, 0) scale(1); }
-      to { transform: translate3d(2%, 2%, 0) scale(1.08); }
-    }
-
-    @keyframes windowOpen {
-      0% { opacity: 0; transform: translateY(28px) scale(.86); }
-      68% { opacity: 1; transform: translateY(-2px) scale(1.012); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    @keyframes modalOpen {
-      0% { opacity: 0; transform: translateY(24px) scale(.9); }
-      72% { opacity: 1; transform: translateY(-2px) scale(1.01); }
-      100% { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .page {
-      min-height: 100svh;
-      padding: max(22px, env(safe-area-inset-top)) 18px max(22px, env(safe-area-inset-bottom));
-      display: grid;
-      place-items: center;
-    }
-
-    .finder {
-      width: min(1040px, calc(100vw - 36px));
-      height: min(720px, calc(100svh - 44px));
-      max-height: calc(100svh - 44px);
-      min-height: min(560px, calc(100svh - 44px));
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      border: 1px solid rgba(255, 255, 255, 0.32);
-      border-radius: var(--radius);
-      background: var(--window);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      backdrop-filter: blur(34px) saturate(1.35);
-      -webkit-backdrop-filter: blur(34px) saturate(1.35);
-      transform-origin: bottom center;
-      transition: transform .46s cubic-bezier(.2, .9, .2, 1), opacity .28s ease, width .34s ease, height .34s ease, border-radius .34s ease, box-shadow .34s ease;
-    }
-
-    .finder.closed {
-      opacity: 0;
-      transform: translateY(12px) scale(.84);
-      pointer-events: none;
-    }
-
-    .finder.minimized {
-      opacity: 0;
-      transform: translateY(48px) scale(.36);
-      pointer-events: none;
-    }
-
-    .finder.opening {
-      animation: windowOpen .48s cubic-bezier(.18, .9, .22, 1) both;
-    }
-
-    .finder.fullscreen {
-      width: 100vw;
-      height: 100svh;
-      max-height: 100svh;
-      min-height: 0;
-      border-radius: 0;
-      border-left: 0;
-      border-right: 0;
-    }
-
-    .toolbar {
-      height: 56px;
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr) auto;
-      align-items: center;
-      gap: 16px;
-      padding: 0 18px;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, 0.35);
-    }
-
-    .traffic {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      flex: 0 0 auto;
-    }
-
-    .dot {
-      width: 13px;
-      height: 13px;
-      border-radius: 50%;
-      border: 0;
-      padding: 0;
-      cursor: pointer;
-      box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12);
-    }
-
-    .red { background: #ff5f57; }
-    .yellow { background: #ffbd2e; }
-    .green { background: #28c840; }
-
-    .dock-open,
-    .folder-dock-open {
-      position: fixed;
-      left: 50%;
-      z-index: 15;
-      transform: translateX(-50%) translateY(22px) scale(.96);
-      opacity: 0;
-      pointer-events: none;
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      border-radius: 999px;
-      padding: 13px 18px;
-      background: rgba(245, 245, 247, 0.82);
-      color: #111;
-      font: inherit;
-      font-weight: 700;
-      box-shadow: 0 18px 50px rgba(0, 0, 0, .28);
-      backdrop-filter: blur(24px) saturate(1.3);
-      -webkit-backdrop-filter: blur(24px) saturate(1.3);
-      cursor: pointer;
-      transition: opacity .24s ease, transform .28s ease;
-    }
-
-    .dock-open { bottom: max(18px, env(safe-area-inset-bottom)); }
-    .folder-dock-open { bottom: max(72px, calc(env(safe-area-inset-bottom) + 72px)); z-index: 25; }
-
-    .dock-open.visible,
-    .folder-dock-open.visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0) scale(1);
-      pointer-events: auto;
-    }
-
-    .titlebar {
-      min-width: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 9px;
-      font-size: 14px;
-      font-weight: 650;
-      color: rgba(20, 20, 24, 0.72);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .toolbar-actions {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .pill {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 7px 10px;
-      background: rgba(255,255,255,0.38);
-      color: inherit;
-      font: inherit;
-      cursor: pointer;
-    }
-
-    .content {
-      min-height: 0;
-      display: grid;
-      grid-template-columns: 248px minmax(0, 1fr);
-    }
-
-    .sidebar {
-      min-height: 0;
-      padding: 16px 12px;
-      border-right: 1px solid var(--line);
-      background: rgba(255,255,255,0.22);
-      overflow: auto;
-    }
-
-    .profile-mini {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      padding: 10px;
-      border-radius: 16px;
-      margin-bottom: 10px;
-    }
-
-    .avatar {
-      width: 46px;
-      height: 46px;
-      border-radius: 15px;
-      overflow: hidden;
-      flex: 0 0 auto;
-      background: #111;
-    }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .name { font-weight: 760; line-height: 1.1; }
-    .tag { margin-top: 3px; color: var(--muted); font-size: 13px; }
-
-    .nav-title {
-      margin: 18px 10px 7px;
-      font-size: 11px;
-      font-weight: 760;
-      color: var(--muted);
-      text-transform: uppercase;
-      letter-spacing: .07em;
-    }
-
-    .nav-list {
-      display: grid;
-      gap: 2px;
-    }
-
-    .nav-item {
-      width: 100%;
-      border: 0;
-      border-radius: 12px;
-      padding: 9px 10px;
-      background: transparent;
-      display: flex;
-      align-items: center;
-      gap: 9px;
-      color: var(--text);
-      font: inherit;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .nav-item.active,
-    .nav-item:hover { background: rgba(10,132,255,.13); }
-
-    .main {
-      min-width: 0;
-      min-height: 0;
-      padding: 22px;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      gap: 20px;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 20px;
-      align-items: end;
-    }
-
-    h1 {
-      margin: 0;
-      font-size: clamp(32px, 6vw, 74px);
-      line-height: .88;
-      letter-spacing: -0.07em;
-    }
-
-    .lead {
-      max-width: 560px;
-      margin: 12px 0 0;
-      color: var(--muted);
-      font-size: clamp(15px, 2vw, 18px);
-      line-height: 1.45;
-    }
-
-    .status-card {
-      min-width: 184px;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      padding: 14px;
-      background: rgba(255,255,255,.36);
-    }
-
-    .status-card strong {
-      display: block;
-      font-size: 24px;
-      letter-spacing: -0.04em;
-    }
-
-    .status-card span {
-      display: block;
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: 13px;
-    }
-
-    .grid {
-      align-content: start;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
-      gap: 15px;
-      min-height: 0;
-    }
-
-    .grid.list-view {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .grid.list-view .file {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      text-align: left;
-      gap: 12px;
-      min-height: auto;
-    }
-
-    .grid.list-view .icon {
-      width: 66px;
-      height: 56px;
-      margin: 0;
-      font-size: 30px;
-    }
-
-    .file[hidden] {
-      display: none !important;
-    }
-
-    .file {
-      min-width: 0;
-      border: 1px solid transparent;
-      border-radius: 18px;
-      padding: 14px 10px 12px;
-      background: transparent;
-      color: inherit;
-      cursor: pointer;
-      text-align: center;
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
-      font: inherit;
-    }
-
-    .file:hover,
-    .file:focus-visible {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.38);
-      border-color: var(--line);
-    }
-
-    .file:active {
-      transform: scale(.98);
-      background: rgba(255,255,255,.46);
-      border-color: var(--line);
-    }
-
-    .icon {
-      width: 66px;
-      height: 56px;
-      margin: 0 auto 10px;
-      display: grid;
-      place-items: center;
-      border-radius: 15px;
-      background: linear-gradient(180deg, #78b7ff, #147dff);
-      box-shadow: 0 12px 24px rgba(10,132,255,.22);
-      color: #fff;
-      font-size: 30px;
-    }
-
-    .icon.fileicon { background: linear-gradient(180deg, #ffffff, #dfe4ee); color: #111; }
-    
-    .file[data-title$=".txt"] .icon {
-      background: linear-gradient(180deg, #ffffff, #e9edf5);
-      box-shadow: 0 8px 18px rgba(0,0,0,.12);
-      color: #111;
-    }
-
-    .file[data-title$=".txt"] .filename {
-      font-weight: 500;
-      opacity: .85;
-    }
-
-    .file[data-title$=".pdf"] .icon {
-      background: linear-gradient(180deg, #ff7b7b, #d51f32);
-      box-shadow: 0 10px 22px rgba(213,31,50,.25);
-    }
-
-    .file[data-title$=".pdf"] .filename {
-      font-weight: 600;
-    }
-    .icon.black { background: linear-gradient(180deg, #2a2b31, #090a0d); }
-    .icon.orange { background: linear-gradient(180deg, #ffd088, #ff8a1d); }
-    .icon.purple { background: linear-gradient(180deg, #d8adff, #8f42ff); }
-    .icon.pdf { background: linear-gradient(180deg, #ff7b7b, #d51f32); color: #fff; }
-
-    .filename {
-      display: block;
-      font-size: 13px;
-      font-weight: 620;
-      overflow-wrap: anywhere;
-      line-height: 1.2;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      z-index: 20;
-      display: none;
-      place-items: center;
-      padding: 18px;
-      background: rgba(0,0,0,.34);
-    }
-
-    .modal.open { display: grid; }
-
-    .modal.opening .modal-card {
-      animation: modalOpen .42s cubic-bezier(.18, .9, .22, 1) both;
-    }
-
-    .modal-card {
-      width: min(560px, 100%);
-      max-height: calc(100svh - 36px);
-      border-radius: 24px;
-      border: 1px solid rgba(255,255,255,.34);
-      background: rgba(246,246,248,.9);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      box-shadow: var(--shadow);
-      overflow: hidden;
-      transform-origin: bottom center;
-      transition: transform .46s cubic-bezier(.2, .9, .2, 1), opacity .28s ease, width .34s ease, height .34s ease, border-radius .34s ease, box-shadow .34s ease;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-    }
-
-    .modal.minimized {
-      background: transparent;
-      pointer-events: none;
-    }
-
-    .modal.minimized .modal-card {
-      opacity: 0;
-      transform: translateY(54px) scale(.42);
-      pointer-events: none;
-    }
-
-    .modal.closing .modal-card {
-      opacity: 0;
-      transform: translateY(12px) scale(.86);
-      pointer-events: none;
-    }
-
-    .modal.fullscreen { padding: 10px; }
-
-    .modal.fullscreen .modal-card {
-      width: 100%;
-      height: calc(100svh - 20px);
-      max-height: calc(100svh - 20px);
-      border-radius: 26px;
-    }
-
-    .modal-head {
-      height: 48px;
-      display: grid;
-      grid-template-columns: auto minmax(0, 1fr);
-      align-items: center;
-      gap: 12px;
-      padding: 0 14px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .modal-titlebar {
-      min-width: 0;
-      text-align: center;
-      font-size: 13px;
-      font-weight: 700;
-      color: var(--muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .modal-body {
-      min-height: 0;
-      padding: 24px;
-      overflow: auto;
-      -webkit-overflow-scrolling: touch;
-    }
-
-    .modal.folder-window .modal-body {
-      padding: 22px;
-      display: block;
-    }
-
-    .modal.editor-window .modal-body {
-      padding: 0;
-      background: rgba(255,255,255,.42);
-      display: grid;
-      grid-template-rows: minmax(0,1fr);
-    }
-
-    .modal.preview-window .modal-body {
-      padding: 0;
-      background: rgba(18, 19, 24, .32);
-      display: grid;
-      grid-template-rows: minmax(0, 1fr);
-    }
-
-    .modal.folder-window #modalTitle,
-    .modal.folder-window #modalText,
-    .modal.editor-window #modalTitle,
-    .modal.editor-window #modalText,
-    .modal.preview-window #modalTitle,
-    .modal.preview-window #modalText {
-      display: none;
-    }
-
-    .modal-body h2 {
-      margin: 0 0 8px;
-      font-size: 28px;
-      letter-spacing: -0.05em;
-    }
-
-    .folder-summary {
-      max-width: 560px;
-      padding: 2px 2px 0;
-    }
-
-    .folder-summary p,
-    .modal-body p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .folder-items {
-      align-content: start;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(112px, 1fr));
-      gap: 16px;
-      min-height: 0;
-      margin-top: 34px;
-    }
-
-    .folder-link {
-      min-width: 0;
-      border: 1px solid transparent;
-      border-radius: 18px;
-      padding: 12px 8px 10px;
-      background: transparent;
-      color: inherit;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: none;
-      transition: transform .18s ease, background .18s ease, border-color .18s ease;
-      font: inherit;
-    }
-
-    .folder-link:hover,
-    .folder-link:focus-visible {
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.38);
-      border-color: var(--line);
-      outline: none;
-    }
-
-    .folder-link:active {
-      transform: scale(.98);
-      background: rgba(255,255,255,.46);
-    }
-
-    .link-icon {
-      width: 64px;
-      height: 56px;
-      margin: 0 auto 10px;
-      display: grid;
-      place-items: center;
-      border-radius: 16px;
-      background: linear-gradient(180deg, #ffffff, #dfe4ee);
-      box-shadow: 0 10px 22px rgba(0,0,0,.14);
-      color: #111;
-      font-size: 29px;
-    }
-
-    .link-icon.telegram { background: linear-gradient(180deg, #68c7ff, #168add); color: #fff; }
-    .link-icon.instagram { background: linear-gradient(135deg, #ffd36b, #ff4f8b 48%, #7b61ff); color: #fff; }
-    .link-icon.email { background: linear-gradient(180deg, #ffffff, #dfe4ee); color: #111; }
-    .link-icon.placeholder { background: linear-gradient(180deg, #e8ebf2, #cdd3df); color: #555; }
-
-    .folder-link-name {
-      display: block;
-      font-size: 13px;
-      font-weight: 620;
-      line-height: 1.2;
-      overflow-wrap: anywhere;
-    }
-
-    .empty-folder {
-      border: 1px dashed var(--line);
-      border-radius: 18px;
-      padding: 18px;
-      color: var(--muted);
-      background: rgba(255,255,255,.22);
-    }
-
-    .editor-shell {
-      height: 100%;
-      width: 100%;
-      display: grid;
-      grid-template-rows: auto minmax(0, 1fr);
-      border: 1px solid var(--line);
-      border-radius: 18px;
-      overflow: hidden;
-      background: rgba(255,255,255,.62);
-    }
-
-    .editor-toolbar {
-      min-height: 42px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 0 14px;
-      border-bottom: 1px solid var(--line);
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 650;
-    }
-
-    .readonly-badge {
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      padding: 5px 9px;
-      background: rgba(255,255,255,.46);
-      white-space: nowrap;
-    }
-
-    .editor-paper {
-      margin: 0;
-      padding: 28px;
-      overflow: auto;
-      white-space: pre-wrap;
-      color: var(--text);
-      font: 15px/1.65 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      outline: none;
-      user-select: text;
-    }
-
-    .preview-shell {
-      width: 100%;
-      height: 100%;
-      min-height: 320px;
-      display: grid;
-      place-items: center;
-      padding: 24px;
-      background:
-        linear-gradient(45deg, rgba(255,255,255,.08) 25%, transparent 25%),
-        linear-gradient(-45deg, rgba(255,255,255,.08) 25%, transparent 25%),
-        linear-gradient(45deg, transparent 75%, rgba(255,255,255,.08) 75%),
-        linear-gradient(-45deg, transparent 75%, rgba(255,255,255,.08) 75%);
-      background-size: 28px 28px;
-      background-position: 0 0, 0 14px, 14px -14px, -14px 0;
-    }
-
-    .preview-image {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain;
-      border-radius: 18px;
-      box-shadow: 0 24px 70px rgba(0,0,0,.32);
-      background: rgba(255,255,255,.08);
-    }
-
-    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-      .finder { background: var(--window-solid); }
-      .dock-open,
-      .folder-dock-open { background: var(--window-solid); }
-      .modal-card { background: var(--window-solid); }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      .finder { background: var(--window-dark); color: var(--text-dark); border-color: rgba(255,255,255,.16); }
-      .toolbar { background: rgba(255,255,255,.05); border-color: var(--line-dark); }
-      .titlebar { color: rgba(255,255,255,.72); }
-      .sidebar { background: rgba(255,255,255,.035); border-color: var(--line-dark); }
-      .tag, .lead, .nav-title, .status-card span, .toolbar-actions, .modal-titlebar, .modal-body p, .link span { color: var(--muted-dark); }
-      .nav-item { color: var(--text-dark); }
-      .pill, .status-card, .file:hover, .file:focus-visible, .modal-card, .folder-link:hover, .folder-link:focus-visible, .empty-folder, .readonly-badge, .editor-shell { border-color: var(--line-dark); background: rgba(255,255,255,.08); }
-      .modal-card { color: var(--text-dark); }
-      .modal.editor-window .modal-body, .editor-shell { background: rgba(20, 22, 28, .78); }
-      .editor-paper { color: var(--text-dark); }
-      .link-icon.email { color: #111; }
-      .folder-summary p, .empty-folder, .editor-toolbar { color: var(--muted-dark); }
-      .dock-open, .folder-dock-open { background: rgba(24, 26, 32, 0.82); color: var(--text-dark); border-color: var(--line-dark); }
-    }
-
-    @media (prefers-color-scheme: dark) {
-      @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-        .finder,
-        .dock-open,
-        .folder-dock-open,
-        .modal-card { background: var(--window-dark-solid); }
-      }
-    }
-
-    @media (max-width: 900px) {
-      .page {
-        padding: 12px;
-        place-items: center;
-      }
-
-      .finder {
-        width: calc(100vw - 24px);
-        height: calc(100svh - 24px);
-        max-height: calc(100svh - 24px);
-        min-height: 0;
-        border-radius: 26px;
-      }
-
-      .finder.fullscreen {
-        width: 100vw;
-        height: 100svh;
-        max-height: 100svh;
-        min-height: 0;
-        border-radius: 0;
-        border-left: 0;
-        border-right: 0;
-      }
-
-      .content {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto minmax(0, 1fr);
-      }
-
-      .sidebar {
-        position: sticky;
-        top: 0;
-        z-index: 4;
-        border-right: 0;
-        border-bottom: 1px solid var(--line);
-        padding: 10px 12px;
-        overflow: hidden;
-        backdrop-filter: blur(22px) saturate(1.2);
-        -webkit-backdrop-filter: blur(22px) saturate(1.2);
-      }
-
-      .profile-mini {
-        margin-bottom: 8px;
-        padding: 4px 2px;
-      }
-
-      .avatar {
-        width: 38px;
-        height: 38px;
-        border-radius: 13px;
-        font-size: 15px;
-      }
-
-      .name { font-size: 14px; }
-      .tag { font-size: 12px; }
-      .nav-title { display: none; }
-
-      .nav-list {
-        display: flex;
-        gap: 8px;
-        overflow-x: auto;
-        padding: 2px 0 1px;
-        scrollbar-width: none;
-        scroll-snap-type: x proximity;
-      }
-
-      .nav-list::-webkit-scrollbar { display: none; }
-
-      .nav-item {
-        flex: 0 0 auto;
-        width: auto;
-        min-height: 36px;
-        padding: 8px 11px;
-        white-space: nowrap;
-        background: rgba(255,255,255,.16);
-        scroll-snap-align: start;
-      }
-
-      .main {
-        padding: 18px 14px 28px;
-        gap: 18px;
-      }
-
-      .hero {
-        grid-template-columns: 1fr;
-        gap: 12px;
-      }
-
-      h1 {
-        font-size: clamp(42px, 15vw, 64px);
-        line-height: .9;
-      }
-
-      .lead {
-        margin-top: 10px;
-        font-size: 15px;
-        line-height: 1.42;
-        max-width: 100%;
-      }
-
-      .status-card {
-        min-width: 0;
-        padding: 12px 13px;
-        border-radius: 18px;
-      }
-
-      .status-card strong { font-size: 22px; }
-      .status-card span { font-size: 12px; }
-
-      .grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 14px 12px;
-        padding: 2px 4px 20px;
-      }
-
-      .file {
-        min-height: 110px;
-        padding: 12px 8px 10px;
-        border-radius: 18px;
-      }
-
-      .file:hover { transform: none; }
-      .file:active { transform: scale(.97); }
-
-      .icon {
-        width: 58px;
-        height: 48px;
-        margin-bottom: 8px;
-        border-radius: 14px;
-        font-size: 25px;
-      }
-
-      .filename { font-size: 12px; }
-
-      .modal {
-        padding: 12px;
-        place-items: center;
-        background: rgba(0,0,0,.38);
-      }
-
-      .modal-card {
-        width: min(680px, 100%);
-        height: auto;
-        max-height: calc(100svh - 24px);
-        border-radius: 26px;
-      }
-
-      .modal.folder-window .modal-card {
-        min-height: min(360px, calc(100svh - 24px));
-      }
-
-      .modal.editor-window .modal-card,
-      .modal.preview-window .modal-card {
-        height: min(560px, calc(100svh - 24px));
-      }
-
-      .modal-head {
-        height: 56px;
-        padding: 0 14px;
-      }
-
-      .modal-titlebar {
-        text-align: left;
-      }
-
-      .modal-body {
-        padding: 22px 16px max(24px, env(safe-area-inset-bottom));
-      }
-
-      .modal.folder-window .modal-body {
-        padding: 20px 18px max(24px, env(safe-area-inset-bottom));
-      }
-
-      .modal.editor-window .modal-body {
-        padding: 14px;
-      }
-
-      .modal.preview-window .modal-body {
-        padding: 0;
-      }
-
-      .folder-items {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 12px;
-        margin-top: 30px;
-      }
-
-      .link-icon {
-        width: 58px;
-        height: 50px;
-        font-size: 25px;
-      }
-
-      .editor-paper {
-        padding: 22px 16px max(24px, env(safe-area-inset-bottom));
-        font-size: 14px;
-      }
-
-      .modal-body h2 {
-        font-size: 30px;
-        line-height: 1;
-      }
-
-      .modal-body p {
-        font-size: 15px;
-        line-height: 1.45;
-      }
-
-      .link {
-        min-height: 54px;
-        padding: 14px 15px;
-        border-radius: 17px;
-      }
-
-      .modal.fullscreen {
-        padding: 0;
-        place-items: stretch;
-      }
-
-      .modal.fullscreen .modal-card {
-        width: 100%;
-        height: 100svh;
-        max-height: 100svh;
-        border-radius: 0;
-      }
-
-      .dock-open,
-      .folder-dock-open {
-        width: min(calc(100% - 28px), 360px);
-        padding: 14px 18px;
-        text-align: center;
-      }
-
-      .dock-open { bottom: max(14px, env(safe-area-inset-bottom)); }
-      .folder-dock-open { bottom: max(76px, calc(env(safe-area-inset-bottom) + 76px)); }
-    }
-
-    @media (max-width: 520px) {
-      body::after {
-        filter: blur(28px);
-      }
-
-      .page {
-        padding: 12px;
-        place-items: center;
-      }
-
-      .finder {
-        width: calc(100vw - 24px);
-        height: calc(100svh - 24px);
-        border-radius: 24px;
-        border-left: 1px solid rgba(255, 255, 255, 0.32);
-        border-right: 1px solid rgba(255, 255, 255, 0.32);
-      }
-
-      .finder.fullscreen {
-        width: 100vw;
-        height: 100svh;
-        border-radius: 0;
-        border-left: 0;
-        border-right: 0;
-      }
-
-      .finder.fullscreen .toolbar,
-      .modal.fullscreen .modal-head {
-        padding-left: 12px;
-        padding-right: 12px;
-      }
-
-      .modal {
-        padding: 12px;
-        place-items: center;
-      }
-
-      .modal-card {
-        width: 100%;
-        height: auto;
-        max-height: calc(100svh - 24px);
-        border-radius: 24px;
-      }
-
-      .modal.folder-window .modal-card {
-        min-height: min(340px, calc(100svh - 24px));
-      }
-
-      .modal.editor-window .modal-card,
-      .modal.preview-window .modal-card {
-        height: min(520px, calc(100svh - 24px));
-      }
-
-      .modal.fullscreen {
-        padding: 0;
-        place-items: stretch;
-      }
-
-      .modal.fullscreen .modal-card {
-        width: 100%;
-        height: 100svh;
-        max-height: 100svh;
-        border-radius: 0;
-      }
-
-      .toolbar {
-        height: calc(54px + env(safe-area-inset-top));
-        padding: env(safe-area-inset-top) 12px 0;
-        grid-template-columns: auto minmax(0, 1fr) auto;
-        gap: 10px;
-      }
-
-      .dot {
-        width: 14px;
-        height: 14px;
-      }
-
-      .titlebar {
-        justify-content: flex-start;
-        font-size: 12px;
-      }
-
-      .toolbar-actions {
-        gap: 6px;
-      }
-
-      .pill {
-        padding: 7px 8px;
-        font-size: 11px;
-      }
-
-      .sidebar {
-        padding: 9px 12px 10px;
-      }
-
-      .main {
-        padding: 18px 12px max(28px, env(safe-area-inset-bottom));
-      }
-
-      h1 {
-        font-size: clamp(40px, 16vw, 58px);
-      }
-
-      .grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
-        padding-inline: 0;
-      }
-
-      .file {
-        min-height: 112px;
-      }
-
-      .icon {
-        width: 62px;
-        height: 52px;
-      }
-
-      .folder-items {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 360px) {
-      .toolbar {
-        gap: 8px;
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      .traffic {
-        gap: 6px;
-      }
-
-      .titlebar {
-        max-width: 100%;
-        justify-content: center;
-      }
-
-      .toolbar-actions {
-        display: flex;
-        gap: 4px;
-      }
-
-      .pill {
-        padding: 6px 7px;
-        font-size: 10px;
-      }
-
-      .grid {
-        gap: 8px;
-      }
-
-      .file {
-        padding-inline: 6px;
-      }
-    }
-
-    @media (hover: none) and (pointer: coarse) {
-      .file:hover,
-      .nav-item:hover {
-        background: transparent;
-      }
-
-      .nav-item.active {
-        background: rgba(10,132,255,.18);
-      }
-
-      .file:active,
-      .file:focus-visible {
-        background: rgba(255,255,255,.26);
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition-duration: .01ms !important;
-      }
-
-      .finder.opening,
-      .modal.opening .modal-card {
-        animation: none !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bogdan Zalessky — Creative Director</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sidebar-w:190px;
+  --detail-w:260px;
+  --toolbar-h:52px;
+  --statusbar-h:26px;
+  --tl-red:#ff5f57;--tl-yel:#febc2e;--tl-grn:#28c840;
+  --win-bg:#f0f0f0;
+  --sidebar-bg:rgba(236,236,236,0.97);
+  --content-bg:#ffffff;
+  --detail-bg:#f6f6f6;
+  --border:#c8c8c8;
+  --text-primary:#111;
+  --text-secondary:#555;
+  --text-muted:#999;
+  --accent:#0051d5;
+  --accent-bg:rgba(0,81,213,0.12);
+  --hover-bg:rgba(0,0,0,0.055);
+  --toolbar-grad:linear-gradient(to bottom,#e8e8e8,#d8d8d8);
+  --status-grad:linear-gradient(to bottom,#e0e0e0,#d4d4d4);
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Text","Helvetica Neue",sans-serif;
+}
+html,body{height:100%;-webkit-font-smoothing:antialiased;font-family:var(--font)}
+body{
+  background:#1a1a2e;
+  background-image:
+    radial-gradient(ellipse at 15% 50%,rgba(100,60,180,0.18) 0%,transparent 55%),
+    radial-gradient(ellipse at 85% 20%,rgba(40,100,200,0.12) 0%,transparent 50%),
+    radial-gradient(ellipse at 50% 90%,rgba(180,50,100,0.08) 0%,transparent 50%);
+  display:flex;align-items:center;justify-content:center;
+  min-height:100vh;padding:32px 16px;
+  transition:padding 0.3s,background 0.4s;
+}
+body.is-fullscreen{padding:0}
+html:not(.dark) body{
+  background:#b2c0d8;
+  background-image:
+    radial-gradient(ellipse at 25% 35%,rgba(180,210,255,0.75) 0%,transparent 55%),
+    radial-gradient(ellipse at 75% 65%,rgba(220,195,255,0.45) 0%,transparent 50%);
+}
+
+/* ── CLOSED OVERLAY ── */
+#closedOverlay{
+  display:none;flex-direction:column;align-items:center;justify-content:center;
+  position:fixed;inset:0;z-index:200;gap:8px;cursor:pointer;
+}
+#closedOverlay.visible{display:flex}
+#closedOverlay .di-icon{font-size:64px;filter:drop-shadow(0 4px 16px rgba(0,0,0,0.4))}
+#closedOverlay .di-label{
+  color:rgba(255,255,255,0.9);font-size:12px;text-align:center;
+  background:rgba(0,0,0,0.4);border-radius:4px;padding:2px 8px;
+  text-shadow:0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* ── MINI DOCK ── */
+#miniDock{
+  position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:rgba(230,230,230,0.85);backdrop-filter:blur(20px);
+  border-radius:16px;padding:8px 16px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.4),0 0 0 1px rgba(255,255,255,0.3);
+  display:none;align-items:center;gap:8px;cursor:pointer;z-index:100;
+  transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+}
+#miniDock.visible{display:flex;transform:translateX(-50%) translateY(0)}
+#miniDock .dock-icon{font-size:32px;filter:drop-shadow(0 2px 6px rgba(0,0,0,0.2))}
+#miniDock .dock-label{font-size:12px;color:#333;font-weight:500}
+
+/* ── FINDER WINDOW ── */
+.finder-window{
+  width:min(1080px,100%);
+  height:min(680px,calc(100vh - 64px));
+  background:var(--win-bg);
+  border-radius:12px;
+  box-shadow:0 0 0 1px rgba(0,0,0,0.28),0 32px 80px rgba(0,0,0,0.65),0 8px 24px rgba(0,0,0,0.4);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+  user-select:none;
+  transform-origin:top center;
+  transition:transform 0.3s cubic-bezier(0.34,1.2,0.64,1),opacity 0.25s,border-radius 0.3s;
+}
+.finder-window.minimizing{transform:scale(0.85) translateY(60px);opacity:0}
+.finder-window.closing{transform:scale(0.92);opacity:0;transition-duration:0.18s}
+.finder-window.fullscreen{
+  position:fixed!important;inset:0!important;width:100vw!important;
+  height:100vh!important;max-width:none!important;border-radius:0!important;
+  z-index:50;
+}
+.finder-window.hidden{display:none}
+
+/* ── TOOLBAR ── */
+.toolbar{
+  background:var(--toolbar-grad);
+  border-bottom:1px solid var(--border);
+  padding:0 14px;
+  height:var(--toolbar-h);
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;position:relative;
+}
+.traffic-lights{display:flex;gap:8px;flex-shrink:0;z-index:1}
+.tl{
+  width:12px;height:12px;border-radius:50%;cursor:pointer;
+  position:relative;transition:filter 0.1s,transform 0.1s;
+  border:0.5px solid rgba(0,0,0,0.12);
+}
+.tl:hover{filter:brightness(0.82);transform:scale(1.1)}
+.tl:active{transform:scale(0.9)}
+.tl.red{background:var(--tl-red)}
+.tl.yellow{background:var(--tl-yel)}
+.tl.green{background:var(--tl-grn)}
+.tl-group:hover .tl.red::after{content:"✕";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:rgba(0,0,0,0.55);line-height:12px;text-align:center}
+.tl-group:hover .tl.yellow::after{content:"−";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:rgba(0,0,0,0.55);line-height:12px;text-align:center}
+.tl-group:hover .tl.green::after{content:"⤢";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700;color:rgba(0,0,0,0.55);line-height:12px;text-align:center}
+.tl-group{display:flex;gap:8px}
+.nav-btns{display:flex;gap:1px;flex-shrink:0}
+.nav-btn{
+  width:28px;height:28px;background:none;border:none;cursor:pointer;
+  color:#555;display:flex;align-items:center;justify-content:center;
+  border-radius:6px;font-size:17px;font-weight:500;
+  transition:background 0.1s;
+}
+.nav-btn:hover{background:rgba(0,0,0,0.08)}
+.nav-btn:disabled{color:#ccc;cursor:default}
+.toolbar-title{
+  position:absolute;left:50%;transform:translateX(-50%);
+  font-size:13px;font-weight:600;color:#2c2c2c;
+  white-space:nowrap;pointer-events:none;letter-spacing:-0.1px;
+}
+.toolbar-right{display:flex;align-items:center;gap:7px;margin-left:auto;flex-shrink:0}
+.lang-btn{
+  font-size:11px;font-weight:700;letter-spacing:0.05em;
+  background:rgba(0,0,0,0.08);border:none;border-radius:5px;
+  padding:4px 8px;cursor:pointer;color:#444;
+  transition:background 0.12s,color 0.12s;font-family:var(--font);
+}
+.lang-btn:hover{background:rgba(0,0,0,0.14);color:#111}
+.view-toggle{display:flex;background:rgba(0,0,0,0.08);border-radius:6px;overflow:hidden}
+.view-btn{
+  width:30px;height:26px;background:none;border:none;cursor:pointer;
+  color:#777;display:flex;align-items:center;justify-content:center;
+  font-size:14px;transition:all 0.12s;
+}
+.view-btn.active{background:#fff;color:#222;box-shadow:0 1px 3px rgba(0,0,0,0.18)}
+.search-wrap{
+  display:flex;align-items:center;
+  background:rgba(0,0,0,0.1);border-radius:6px;
+  padding:4px 8px;gap:5px;width:150px;
+  border:1px solid transparent;transition:all 0.15s;
+}
+.search-wrap:focus-within{background:#fff;border-color:rgba(0,100,255,0.4);box-shadow:0 0 0 3px rgba(0,100,255,0.15);width:180px}
+.search-wrap svg{flex-shrink:0;color:#999}
+.search-wrap input{border:none;background:none;outline:none;font-size:12px;color:#333;width:100%;font-family:var(--font)}
+.search-wrap input::placeholder{color:#aaa}
+
+/* ── BODY ROW ── */
+.finder-body{display:flex;flex:1;min-height:0;overflow:hidden}
+
+/* ── SIDEBAR ── */
+.sidebar{
+  width:var(--sidebar-w);flex-shrink:0;
+  background:var(--sidebar-bg);
+  border-right:1px solid var(--border);
+  overflow-y:auto;padding:10px 0;
+}
+.sidebar::-webkit-scrollbar{width:4px}
+.sidebar::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.18);border-radius:4px}
+.sb-label{
+  font-size:10.5px;font-weight:700;color:#999;
+  letter-spacing:0.06em;text-transform:uppercase;
+  padding:8px 16px 3px;
+}
+.sb-item{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 10px 5px 14px;cursor:pointer;
+  border-radius:6px;margin:0 5px;
+  transition:background 0.1s;color:var(--text-primary);font-size:13px;
+}
+.sb-item:hover{background:var(--hover-bg)}
+.sb-item.active{background:var(--accent-bg);color:var(--accent)}
+.sb-item .si-icon{width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+
+/* ── CONTENT AREA ── */
+.content-area{flex:1;background:var(--content-bg);overflow-y:auto;display:flex;flex-direction:column;position:relative}
+.content-area::-webkit-scrollbar{width:8px}
+.content-area::-webkit-scrollbar-track{background:#f8f8f8}
+.content-area::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.18);border-radius:4px}
+.content-inner{flex:1;padding:20px 22px}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.content-inner>*{animation:fadeUp 0.22s ease}
+
+/* ── ICON VIEW ── */
+.icon-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:2px}
+.icon-item{
+  display:flex;flex-direction:column;align-items:center;
+  padding:10px 6px;border-radius:7px;cursor:pointer;
+  transition:background 0.1s;text-align:center;
+}
+.icon-item:hover{background:rgba(0,100,255,0.07)}
+.icon-item.selected{background:rgba(0,100,255,0.16)}
+.icon-item .fi{font-size:46px;line-height:1;margin-bottom:6px;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.14))}
+.icon-item .fn{font-size:11px;color:#222;line-height:1.3;word-break:break-word;max-width:88px}
+
+/* ── LIST VIEW ── */
+.list-view{width:100%}
+.list-hdr{
+  display:grid;grid-template-columns:1fr 130px 100px;
+  padding:4px 12px;border-bottom:1px solid #ebebeb;
+  background:#fafafa;font-size:11px;color:#777;font-weight:600;
+  letter-spacing:0.02em;position:sticky;top:0;z-index:2;
+}
+.list-row{
+  display:grid;grid-template-columns:1fr 130px 100px;
+  padding:5px 12px;border-bottom:1px solid #f2f2f2;
+  align-items:center;cursor:pointer;transition:background 0.1s;
+}
+.list-row:hover{background:rgba(0,100,255,0.05)}
+.list-row.selected{background:rgba(0,100,255,0.13)}
+.row-name{display:flex;align-items:center;gap:8px;font-size:13px;color:#222}
+.list-row.selected .row-name{color:var(--accent)}
+.row-icon{font-size:18px;flex-shrink:0}
+.row-meta{font-size:12px;color:#999}
+.list-row.selected .row-meta{color:rgba(0,81,213,0.65)}
+
+/* ── DETAIL PANEL ── */
+.detail-panel{
+  width:var(--detail-w);flex-shrink:0;
+  background:var(--detail-bg);border-left:1px solid #ddd;
+  padding:20px 16px;overflow-y:auto;
+}
+.detail-panel::-webkit-scrollbar{width:4px}
+.detail-panel::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.15);border-radius:4px}
+.dp-icon{font-size:64px;text-align:center;margin:4px 0 10px;filter:drop-shadow(0 3px 8px rgba(0,0,0,0.12))}
+.dp-name{font-size:13px;font-weight:600;color:#111;text-align:center;line-height:1.35}
+.dp-type{font-size:11px;color:#aaa;text-align:center;margin-top:3px}
+.dp-divider{border:none;border-top:1px solid #e2e2e2;margin:12px 0}
+.dp-sec{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#aaa;margin-bottom:7px}
+.dp-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:7px;gap:8px}
+.dp-row .dk{font-size:11.5px;color:#aaa;flex-shrink:0}
+.dp-row .dv{font-size:11.5px;color:#333;text-align:right;line-height:1.4}
+.dp-desc{font-size:12px;color:#555;line-height:1.65}
+.tag-list{display:flex;flex-wrap:wrap;gap:5px;margin-top:4px}
+.tag{font-size:11px;padding:3px 8px;background:rgba(0,100,255,0.1);color:var(--accent);border-radius:4px;font-weight:500}
+.dp-link{
+  display:flex;align-items:center;gap:6px;
+  font-size:12px;color:var(--accent);text-decoration:none;
+  padding:7px 10px;background:rgba(0,100,255,0.08);
+  border-radius:7px;transition:background 0.12s;margin-top:6px;
+}
+.dp-link:hover{background:rgba(0,100,255,0.16)}
+.dp-empty{text-align:center;color:#ccc;margin-top:50px}
+.dp-empty .dp-ei{font-size:36px;margin-bottom:10px}
+.dp-empty p{font-size:12px;line-height:1.65}
+
+/* ── PATH & STATUS BARS ── */
+.path-bar{
+  background:linear-gradient(to bottom,#e8e8e8,#dedede);
+  border-top:1px solid #cccccc;
+  padding:3px 14px;display:flex;align-items:center;gap:4px;
+  font-size:11px;color:#666;flex-shrink:0;
+}
+.ps{display:flex;align-items:center;gap:3px;cursor:pointer;padding:2px 5px;border-radius:4px;transition:background 0.1s}
+.ps:hover{background:rgba(0,0,0,0.07)}
+.p-sep{color:#bbb;font-size:10px}
+.status-bar{
+  background:var(--status-grad);border-top:1px solid #b8b8b8;
+  padding:3px 16px;display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:#777;flex-shrink:0;
+}
+
+/* ── SECTION CONTENT ── */
+.sec{display:flex;flex-direction:column;gap:18px}
+.card{background:#f8f8f8;border-radius:10px;padding:18px;border:1px solid #ebebeb}
+.avatar{
+  width:68px;height:68px;border-radius:50%;
+  background:linear-gradient(135deg,#434,#606);
+  display:flex;align-items:center;justify-content:center;
+  font-size:26px;color:#fff;font-weight:700;
+  margin-bottom:12px;
+  box-shadow:0 4px 14px rgba(60,60,80,0.35);
+  overflow:hidden;
+}
+.avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.about-name{font-size:22px;font-weight:700;color:#111;letter-spacing:-0.3px}
+.about-role{font-size:14px;color:#666;margin-top:3px}
+.about-bio{font-size:13px;color:#444;line-height:1.72;margin-top:11px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{
+  font-size:12px;padding:5px 12px;
+  background:#fff;border:1px solid #e0e0e0;
+  border-radius:20px;color:#333;cursor:pointer;
+  display:flex;align-items:center;gap:5px;
+  transition:all 0.12s;text-decoration:none;
+}
+.chip:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,81,213,0.04)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.info-tile{background:#f8f8f8;border:1px solid #ebebeb;border-radius:8px;padding:13px}
+.it-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#bbb;margin-bottom:5px}
+.it-val{font-size:14px;font-weight:600;color:#222}
+.it-sub{font-size:11px;color:#aaa;margin-top:2px}
+.skill-group{margin-bottom:10px}
+.skill-lbl{display:flex;justify-content:space-between;margin-bottom:5px}
+.skill-lbl span:first-child{font-size:12px;font-weight:600;color:#444}
+.skill-lbl span:last-child{font-size:11px;color:#bbb}
+.bar-bg{height:5px;background:#e5e5e5;border-radius:3px;overflow:hidden}
+.bar{height:100%;border-radius:3px;background:linear-gradient(90deg,#0051d5,#4da6ff);width:0;transition:width 0.75s cubic-bezier(0.4,0,0.2,1)}
+.exp-item{padding:14px;background:#f8f8f8;border:1px solid #ebebeb;border-radius:8px}
+.exp-item+.exp-item{margin-top:9px}
+.exp-role{font-size:14px;font-weight:600;color:#111}
+.exp-co{font-size:13px;color:var(--accent);margin-top:2px}
+.exp-per{font-size:11px;color:#bbb;margin-top:3px}
+.exp-desc{font-size:12px;color:#555;margin-top:7px;line-height:1.65}
+
+/* ── MOBILE BOTTOM TABS ── */
+.mob-tabs{
+  display:none;
+  background:rgba(240,240,240,0.95);
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+}
+.mob-tabs-inner{
+  display:flex;padding:8px 4px calc(8px + env(safe-area-inset-bottom));
+}
+.mob-tab{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  gap:3px;padding:4px 2px;cursor:pointer;border-radius:8px;
+  transition:background 0.1s;border:none;background:none;
+  font-family:var(--font);
+}
+.mob-tab:hover{background:rgba(0,0,0,0.05)}
+.mob-tab.active .mt-icon{filter:drop-shadow(0 0 6px rgba(0,81,213,0.5))}
+.mt-icon{font-size:22px;line-height:1}
+.mt-lbl{font-size:9.5px;color:#555;font-weight:500}
+.mob-tab.active .mt-lbl{color:var(--accent);font-weight:700}
+
+/* ── MOBILE BOTTOM SHEET ── */
+#bottomSheet{
+  position:fixed;inset:0;z-index:300;pointer-events:none;
+}
+#bottomSheet.open{pointer-events:all}
+.bs-backdrop{
+  position:absolute;inset:0;background:rgba(0,0,0,0);
+  transition:background 0.3s;
+}
+#bottomSheet.open .bs-backdrop{background:rgba(0,0,0,0.45)}
+.bs-panel{
+  position:absolute;bottom:0;left:0;right:0;
+  background:#fff;border-radius:18px 18px 0 0;
+  padding:0 0 calc(24px + env(safe-area-inset-bottom));
+  transform:translateY(100%);
+  transition:transform 0.36s cubic-bezier(0.32,0.72,0,1);
+  max-height:85vh;overflow-y:auto;
+}
+#bottomSheet.open .bs-panel{transform:translateY(0)}
+.bs-handle{width:36px;height:4px;background:#ddd;border-radius:2px;margin:12px auto 16px}
+.bs-content{padding:0 18px 8px}
+
+/* ── MOBILE OVERRIDES ── */
+@media(max-width:768px){
+  body{padding:0;align-items:stretch;background:#f0f0f0}
+  body.is-fullscreen{padding:0}
+  .finder-window{
+    width:100%;height:100dvh;border-radius:0;
+    box-shadow:none;
+  }
+  .finder-window.fullscreen{border-radius:0}
+  .sidebar{display:none}
+  .detail-panel{display:none}
+  .mob-tabs{display:block}
+  .toolbar{height:48px;padding:0 12px;gap:8px}
+  .toolbar-title{font-size:12px}
+  .nav-btns{display:none}
+  .view-toggle{display:none}
+  .search-wrap{width:120px}
+  .search-wrap:focus-within{width:calc(100vw - 180px);max-width:300px}
+  .content-inner{padding:14px 14px}
+  .icon-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+  .icon-item .fi{font-size:38px}
+  .icon-item .fn{font-size:10px}
+  .info-grid{grid-template-columns:1fr 1fr}
+  .about-name{font-size:19px}
+  .status-bar{display:none}
+  .path-bar{display:none}
+  #finderWindow.minimizing{transform:scale(0.9) translateY(40px);opacity:0}
+}
+@media(min-width:769px) and (max-width:1024px){
+  :root{--detail-w:220px;--sidebar-w:170px}
+  .search-wrap{width:120px}
+}
+
+/* ══════════════════════════════════════════
+   DARK THEME — matches real macOS Finder dark
+   ══════════════════════════════════════════ */
+html.dark{
+  --win-bg:#252526;
+  --sidebar-bg:#1e1e1e;
+  --content-bg:#282829;
+  --detail-bg:#1e1e1e;
+  --border:rgba(255,255,255,0.07);
+  --text-primary:#dcdcdc;
+  --text-secondary:#a0a0a0;
+  --text-muted:#5a5a5e;
+  --accent:#3880f0;
+  --accent-bg:#1d6de5;
+  --hover-bg:rgba(255,255,255,0.06);
+  --toolbar-grad:linear-gradient(to bottom,#363638,#2c2c2e);
+  --status-grad:linear-gradient(to bottom,#242426,#1e1e20);
+}
+
+/* body wallpaper already handled above */
+@media(max-width:768px){
+  html.dark body{background:#1e1e1e}
+  html:not(.dark) body{background:#e4e4e4}
+}
+
+/* ── Window ── */
+html.dark .finder-window{
+  box-shadow:0 0 0 1px rgba(0,0,0,0.7),0 32px 80px rgba(0,0,0,0.8),0 8px 24px rgba(0,0,0,0.6);
+}
+
+/* ── Toolbar ── */
+html.dark .toolbar{border-bottom-color:rgba(0,0,0,0.55)}
+html.dark .toolbar-title{color:#d4d4d6}
+html.dark .nav-btn{color:#6e6e72}
+html.dark .nav-btn:hover{background:rgba(255,255,255,0.09)}
+html.dark .nav-btn:disabled{color:#3a3a3c}
+html.dark .lang-btn{background:rgba(255,255,255,0.09);color:#b0b0b4;border:1px solid rgba(255,255,255,0.06)}
+html.dark .lang-btn:hover{background:rgba(255,255,255,0.14);color:#e0e0e0}
+html.dark .theme-btn{color:#8e8e93}
+html.dark .theme-btn:hover{background:rgba(255,255,255,0.09);color:#d0d0d0}
+html.dark .view-toggle{background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.05)}
+html.dark .view-btn{color:#6e6e72}
+html.dark .view-btn.active{background:rgba(255,255,255,0.16);color:#dcdcdc;box-shadow:0 1px 3px rgba(0,0,0,0.5)}
+html.dark .search-wrap{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.06)}
+html.dark .search-wrap:focus-within{background:#3a3a3c;border-color:rgba(56,128,240,0.6);box-shadow:0 0 0 3px rgba(56,128,240,0.2)}
+html.dark .search-wrap svg{color:#5e5e62}
+html.dark .search-wrap input{color:#dcdcdc}
+html.dark .search-wrap input::placeholder{color:#4e4e52}
+
+/* ── Sidebar ── */
+html.dark .sidebar{background:var(--sidebar-bg);border-right-color:rgba(0,0,0,0.45)}
+html.dark .sidebar::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1)}
+html.dark .sb-label{color:rgba(255,255,255,0.34)}
+html.dark .sb-item{color:rgba(255,255,255,0.78)}
+html.dark .sb-item:hover{background:rgba(255,255,255,0.07)}
+html.dark .sb-item.active{background:#1d6de5;color:#fff}
+html.dark .sb-item.active .si-icon{filter:brightness(10)}
+
+/* ── Content area ── */
+html.dark .content-area::-webkit-scrollbar-track{background:#202022}
+html.dark .content-area::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1)}
+html.dark .icon-item:hover{background:rgba(255,255,255,0.06)}
+html.dark .icon-item.selected{background:rgba(56,128,240,0.3)}
+html.dark .icon-item .fn{color:rgba(255,255,255,0.82)}
+html.dark .list-hdr{background:#202022;border-color:rgba(255,255,255,0.05);color:#5a5a5e}
+html.dark .list-row{border-color:rgba(255,255,255,0.04)}
+html.dark .list-row:hover{background:rgba(255,255,255,0.05)}
+html.dark .list-row.selected{background:rgba(56,128,240,0.25)}
+html.dark .row-name{color:rgba(255,255,255,0.82)}
+html.dark .list-row.selected .row-name{color:#7db5ff}
+html.dark .row-meta{color:#5a5a5e}
+html.dark .list-row.selected .row-meta{color:rgba(125,181,255,0.65)}
+
+/* ── Detail panel ── */
+html.dark .detail-panel{border-left-color:rgba(0,0,0,0.45)}
+html.dark .detail-panel::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1)}
+html.dark .dp-name{color:#e0e0e0}
+html.dark .dp-divider{border-color:rgba(255,255,255,0.06)}
+html.dark .dp-row .dv{color:#b0b0b8}
+html.dark .dp-desc{color:#8e8e98}
+html.dark .dp-empty{color:#3a3a3e}
+html.dark .tag{background:rgba(56,128,240,0.18);color:#7db5ff}
+html.dark .dp-link{background:rgba(56,128,240,0.14);color:#7db5ff}
+html.dark .dp-link:hover{background:rgba(56,128,240,0.24)}
+
+/* ── Path & Status bars ── */
+html.dark .path-bar{background:linear-gradient(to bottom,#242426,#1e1e20);border-color:rgba(0,0,0,0.45);color:#5a5a5e}
+html.dark .ps:hover{background:rgba(255,255,255,0.06)}
+html.dark .p-sep{color:#3a3a3e}
+html.dark .status-bar{border-color:rgba(0,0,0,0.45);color:#5a5a5e}
+
+/* ── Cards & section content ── */
+html.dark .sec .card{background:#2e2e30;border-color:rgba(255,255,255,0.06)}
+html.dark .about-name{color:#e8e8e8}
+html.dark .about-role{color:#8e8e98}
+html.dark .about-bio{color:#9a9aa0}
+html.dark .chip{background:#3a3a3c;border-color:rgba(255,255,255,0.08);color:#c8c8cc}
+html.dark .chip:hover{border-color:#3880f0;color:#7db5ff;background:rgba(56,128,240,0.1)}
+html.dark .info-tile{background:#2e2e30;border-color:rgba(255,255,255,0.06)}
+html.dark .it-val{color:#e0e0e0}
+html.dark .skill-lbl span:first-child{color:#b0b0b8}
+html.dark .bar-bg{background:rgba(255,255,255,0.08)}
+html.dark .bar{background:linear-gradient(90deg,#1d6de5,#5aa3ff)}
+html.dark .exp-item{background:#2e2e30;border-color:rgba(255,255,255,0.06)}
+html.dark .exp-role{color:#e0e0e0}
+html.dark .exp-desc{color:#8e8e98}
+html.dark .dp-sec{color:rgba(255,255,255,0.34)}
+
+/* ── Mobile elements ── */
+html.dark .mob-tabs{background:rgba(28,28,30,0.97);border-top-color:rgba(0,0,0,0.6)}
+html.dark .mob-tab:hover{background:rgba(255,255,255,0.06)}
+html.dark .mt-lbl{color:#8e8e93}
+html.dark .mob-tab.active .mt-lbl{color:#5aabff}
+html.dark .bs-panel{background:#2c2c2e}
+html.dark .bs-handle{background:#3a3a3c}
+html.dark #miniDock{background:rgba(40,40,42,0.95);box-shadow:0 8px 32px rgba(0,0,0,0.7),0 0 0 1px rgba(255,255,255,0.08)}
+html.dark #miniDock .dock-label{color:#d0d0d0}
+
+/* ── Theme toggle button ── */
+.theme-btn{
+  width:28px;height:28px;background:none;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;border-radius:6px;
+  transition:background 0.12s;flex-shrink:0;
+}
+.theme-btn:hover{background:rgba(0,0,0,0.08)}
+
+/* ── Mobile tabs — bigger touch targets ── */
+@media(max-width:768px){
+  .mob-tabs-inner{padding:6px 0 calc(10px + env(safe-area-inset-bottom))}
+  .mob-tab{padding:6px 4px;gap:4px;border-radius:10px}
+  .mt-icon{font-size:26px}
+  .mt-lbl{font-size:11px;font-weight:500}
+}
+</style>
 </head>
 <body>
-  <main class="page">
-    <section class="finder" id="finderWindow" aria-label="Personal finder profile">
-      <header class="toolbar">
-        <div class="traffic" aria-label="Управление окном" data-i18n-aria="windowControls">
-          <button class="dot red" id="closeWindow" aria-label="Закрыть окно" data-i18n-aria="closeWindow"></button>
-          <button class="dot yellow" id="minimizeWindow" aria-label="Свернуть окно" data-i18n-aria="minimizeWindow"></button>
-          <button class="dot green" id="fullscreenWindow" aria-label="На весь экран" data-i18n-aria="fullscreenWindow"></button>
-        </div>
-        <div class="titlebar" data-i18n="titlebar">📁 bogdan_zaless</div>
-        <div class="toolbar-actions">
-          <button class="pill" id="gridToggle" type="button" aria-pressed="true">Grid</button>
-          <button class="pill" id="languageToggle" type="button" aria-label="Switch language">EN</button>
-          <button class="pill" id="shareButton" type="button">Share</button>
-        </div>
-      </header>
 
-      <div class="content">
-        <aside class="sidebar">
-          <div class="profile-mini">
-            <div class="avatar"><img src="avatar.png" alt="Avatar"></div>
-            <div>
-              <div class="name" data-i18n="sidebarName">Bogdan</div>
-              <div class="tag" data-i18n="sidebarTag">Creative Director</div>
-            </div>
-          </div>
+<!-- Closed overlay -->
+<div id="closedOverlay" onclick="reopenWindow()">
+  <div class="di-icon">📁</div>
+  <div class="di-label">bogdan_zaless.ru</div>
+</div>
 
-          <div class="nav-title" data-i18n="navTitle">Favorites</div>
-          <div class="nav-list">
-            <button class="nav-item active" data-filter="all" data-i18n="navDesktop">🖥️ Рабочий Стол</button>
-            <button class="nav-item" data-filter="links" data-i18n="navLinks">🔗 Ссылки</button>
-            <button class="nav-item" data-filter="work" data-i18n="navWork">💼 Работы</button>
-            <button class="nav-item" data-filter="contacts" data-i18n="navContacts">💬 Контакты</button>
-          </div>
-        </aside>
+<!-- Mini dock (minimized) -->
+<div id="miniDock" onclick="restoreWindow()">
+  <div class="dock-icon">📁</div>
+  <div class="dock-label">bogdan_zaless.ru</div>
+</div>
 
-        <section class="main">
-          <div class="hero">
-            <div>
-              <h1 data-i18n="heroTitle">Богдан<br>Залесский</h1>
-              <p class="lead" data-i18n="heroLead">Привет! Здесь ты найдёшь мои работы, контакты и кое-что интересное.</p>
-            </div>
-            
-          </div>
+<!-- Bottom sheet (mobile detail) -->
+<div id="bottomSheet">
+  <div class="bs-backdrop" onclick="closeBottomSheet()"></div>
+  <div class="bs-panel" id="bsPanel">
+    <div class="bs-handle"></div>
+    <div class="bs-content" id="bsContent"></div>
+  </div>
+</div>
 
-          <div class="grid" id="grid">
-            <button class="file" data-type="work" data-folder="avatar" data-title="avatar.png" data-text="Моя аватарка." data-links='[]'>
-              <span class="icon fileicon">🖼️</span>
-              <span class="filename">avatar.png</span>
-            </button>
-            <button class="file" data-type="links" data-folder="social" data-title="Соцсети" data-text="Все основные способы связаться со мной и следить за моими работами." data-links='[{"label":"Telegram","url":"https://t.me/bogdan_zaless"},{"label":"Instagram","url":"https://www.instagram.com/bogdan_zaless"}]'>
-              <span class="icon">📁</span>
-              <span class="filename" data-i18n="fileSocial">Соцсети</span>
-            </button>
+<!-- ══════ FINDER WINDOW ══════ -->
+<div class="finder-window" id="finderWindow">
 
-            <button class="file" data-type="work" data-folder="portfolio" data-title="Портфолио" data-text="Подборка моих работ, кейсов и проектов." data-links='[{"label":"Скоро здесь","url":"#"}]'>
-              <span class="icon purple">📁</span>
-              <span class="filename" data-i18n="filePortfolio">Портфолио</span>
-            </button>
-
-            <button class="file" data-type="contacts" data-folder="contacts" data-title="Контакты" data-text="Связаться со мной напрямую — самый быстрый способ обсудить проект." data-links='[{"label":"Telegram","url":"https://t.me/bogdan_zaless"},{"label":"Email","url":"mailto:bogdanzaless@gmail.com"}]'>
-              <span class="icon orange">📁</span>
-              <span class="filename" data-i18n="fileContacts">Контакты</span>
-            </button>
-
-            <button class="file" data-type="work" data-folder="about" data-title="about.txt" data-text="Уже много лет работаю в сфере креатива, маркетинга и дизайна: от визуальных концепций до текстов и идей спец. проектов. Обожаю проекты с характером и смыслом, когда есть не только форма, но и сильная идея." data-links='[]'>
-              <span class="icon fileicon">📄</span>
-              <span class="filename" data-i18n="fileAbout">about.txt</span>
-            </button>
-
-            
-
-            <button class="file" data-type="contacts" data-folder="qr" data-title="QR Code" data-text="Здесь позже появится QR-код или быстрый доступ к дополнительным материалам." data-links='[]'>
-              <span class="icon fileicon">▦</span>
-              <span class="filename" data-i18n="fileQr">QR Code</span>
-            </button>
-          </div>
-        </section>
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="tl-group traffic-lights">
+      <div class="tl red"    title="Close"    onclick="tlClose()"></div>
+      <div class="tl yellow" title="Minimize" onclick="tlMinimize()"></div>
+      <div class="tl green"  title="Fullscreen" onclick="tlFullscreen()"></div>
+    </div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="btnBack" disabled onclick="goBack()">‹</button>
+      <button class="nav-btn" id="btnFwd"  disabled onclick="goFwd()">›</button>
+    </div>
+    <div class="toolbar-title" id="toolbarTitle">bogdan_zaless</div>
+    <div class="toolbar-right">
+      <button class="theme-btn" id="themeBtn" onclick="toggleTheme()" title="Toggle theme">☀️</button>
+      <button class="lang-btn" id="langBtn" onclick="toggleLang()">RU</button>
+      <div class="view-toggle">
+        <button class="view-btn active" id="vIcon" title="Icon view"  onclick="setView('icon')">⊞</button>
+        <button class="view-btn"        id="vList" title="List view"  onclick="setView('list')">☰</button>
       </div>
-    </section>
-  </main>
-
-  <button class="dock-open" id="openWindow" type="button" data-i18n="openWindowButton">📁 Открыть Finder</button>
-
-  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="modal-card">
-      <div class="modal-head">
-        <div class="traffic" aria-label="Управление папкой" data-i18n-aria="folderControls">
-          <button class="dot red" id="closeFolder" aria-label="Закрыть папку" data-i18n-aria="closeFolder"></button>
-          <button class="dot yellow" id="minimizeFolder" aria-label="Свернуть папку" data-i18n-aria="minimizeFolder"></button>
-          <button class="dot green" id="fullscreenFolder" aria-label="Открыть папку на весь экран" data-i18n-aria="fullscreenFolder"></button>
-        </div>
-        <div class="modal-titlebar" id="folderTitlebar">Folder</div>
-      </div>
-      <div class="modal-body">
-        <h2 id="modalTitle"></h2>
-        <p id="modalText"></p>
-        <div class="links" id="modalLinks"></div>
+      <div class="search-wrap">
+        <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/></svg>
+        <input type="text" id="searchInput" oninput="handleSearch(this.value)">
       </div>
     </div>
   </div>
 
-  <button class="folder-dock-open" id="openFolder" type="button">📂 Открыть папку</button>
+  <!-- BODY -->
+  <div class="finder-body">
 
-  <script>
-    'use strict';
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sb-label" data-i18n="fav">Favorites</div>
+      <div class="sb-item active" id="si-about" onclick="navigate('about')">
+        <div class="si-icon">🏠</div><span data-i18n="about">About</span>
+      </div>
+      <div class="sb-item" id="si-projects" onclick="navigate('projects')">
+        <div class="si-icon">📁</div><span data-i18n="projects">Projects</span>
+      </div>
+      <div class="sb-item" id="si-skills" onclick="navigate('skills')">
+        <div class="si-icon">⚡</div><span data-i18n="skills">Skills</span>
+      </div>
+      <div class="sb-label" data-i18n="work">Work</div>
+      <div class="sb-item" id="si-experience" onclick="navigate('experience')">
+        <div class="si-icon">💼</div><span data-i18n="experience">Experience</span>
+      </div>
+      <div class="sb-label" data-i18n="connect">Connect</div>
+      <div class="sb-item" id="si-contact" onclick="navigate('contact')">
+        <div class="si-icon">✉️</div><span data-i18n="contact">Contact</span>
+      </div>
+      <div class="sb-item" onclick="openLink('https://t.me/bogdan_zaless')">
+        <div class="si-icon">✈️</div><span>Telegram</span>
+      </div>
+      <div class="sb-item" onclick="openLink('https://bogdanzaless.ru')">
+        <div class="si-icon">🌐</div><span>Website</span>
+      </div>
+      <div class="sb-label" data-i18n="tags">Tags</div>
+      <div class="sb-item" onclick="filterTag('brand')">
+        <div class="si-icon" style="color:#e74c3c">●</div><span>Branding</span>
+      </div>
+      <div class="sb-item" onclick="filterTag('motion')">
+        <div class="si-icon" style="color:#9b59b6">●</div><span>Motion</span>
+      </div>
+      <div class="sb-item" onclick="filterTag('digital')">
+        <div class="si-icon" style="color:#3498db">●</div><span>Digital</span>
+      </div>
+      <div class="sb-item" onclick="filterTag('fashion')">
+        <div class="si-icon" style="color:#e91e8c">●</div><span>Fashion</span>
+      </div>
+      <div class="sb-item" onclick="filterTag('bank')">
+        <div class="si-icon" style="color:#f39c12">●</div><span>Banking</span>
+      </div>
+    </div>
 
-    const finderWindow = document.querySelector('#finderWindow');
-    const closeWindow = document.querySelector('#closeWindow');
-    const minimizeWindow = document.querySelector('#minimizeWindow');
-    const fullscreenWindow = document.querySelector('#fullscreenWindow');
-    const openWindow = document.querySelector('#openWindow');
-    const modal = document.querySelector('#modal');
-    const modalTitle = document.querySelector('#modalTitle');
-    const folderTitlebar = document.querySelector('#folderTitlebar');
-    const closeFolder = document.querySelector('#closeFolder');
-    const minimizeFolder = document.querySelector('#minimizeFolder');
-    const fullscreenFolder = document.querySelector('#fullscreenFolder');
-    const openFolder = document.querySelector('#openFolder');
-    const modalText = document.querySelector('#modalText');
-    const modalLinks = document.querySelector('#modalLinks');
-    const grid = document.querySelector('#grid');
-    const files = [...document.querySelectorAll('.file')];
-    const navItems = [...document.querySelectorAll('.nav-item')];
-    const gridBtn = document.querySelector('#gridToggle');
-    const shareBtn = document.querySelector('#shareButton');
-    const languageBtn = document.querySelector('#languageToggle');
+    <!-- CONTENT -->
+    <div class="content-area">
+      <div class="content-inner" id="contentInner"></div>
+      <div class="path-bar" id="pathBar">
+        <div class="ps">🏠</div>
+        <span class="p-sep">›</span>
+        <div class="ps" id="pathCurrent">About</div>
+      </div>
+    </div>
 
-    let isGrid = true;
-    let currentLanguage = 'ru';
-    let activeFolderTitle = 'папку';
-    let activeFolderKey = null;
-    let wasWindowFullscreen = false;
-    let wasModalFullscreen = false;
+    <!-- DETAIL PANEL -->
+    <div class="detail-panel" id="detailPanel">
+      <div class="dp-empty">
+        <div class="dp-ei">ℹ️</div>
+        <p id="dpHint">Select an item<br>to view info</p>
+      </div>
+    </div>
 
-    const translations = {
-      ru: {
-        htmlLang: 'ru',
-        pageTitle: 'Богдан Залесский',
-        metaDescription: 'Портфолио и контакты Богдана Залесского',
-        titlebar: '📁 bogdan_zaless',
-        sidebarName: 'Bogdan',
-        sidebarTag: 'Creative Director',
-        navTitle: 'Favorites',
-        navDesktop: '🖥️ Рабочий Стол',
-        navLinks: '🔗 Ссылки',
-        navWork: '💼 Работы',
-        navContacts: '💬 Контакты',
-        heroTitle: 'Богдан<br>Залесский',
-        heroLead: 'Привет! Здесь ты найдёшь мои работы, контакты и кое-что интересное.',
-        fileSocial: 'Соцсети',
-        filePortfolio: 'Портфолио',
-        fileContacts: 'Контакты',
-        fileAbout: 'about.txt',
-        fileQr: 'QR Code',
-        openWindowButton: '📁 Открыть Finder',
-        openFolderPrefix: '📂 Открыть ',
-        previewOnly: 'Preview only',
-        noLinks: 'no links',
-        grid: 'Grid',
-        list: 'List',
-        share: 'Share',
-        copied: 'Copied',
-        copyFailed: 'Copy failed',
-        languageButton: 'EN',
-        windowControls: 'Управление окном',
-        folderControls: 'Управление папкой',
-        closeWindow: 'Закрыть окно',
-        minimizeWindow: 'Свернуть окно',
-        fullscreenWindow: 'На весь экран',
-        closeFolder: 'Закрыть папку',
-        minimizeFolder: 'Свернуть папку',
-        fullscreenFolder: 'Открыть папку на весь экран',
-        folders: {
-          social: { title: 'Соцсети', text: 'Все основные способы связаться со мной и следить за моими работами.' },
-          portfolio: { title: 'Портфолио', text: 'Подборка моих работ, кейсов и проектов.', links: [{ label: 'Скоро здесь', url: '#' }] },
-          contacts: { title: 'Контакты', text: 'Связаться со мной напрямую — самый быстрый способ обсудить проект.' },
-          about: { title: 'about.txt', text: 'Уже много лет работаю в сфере креатива, маркетинга и дизайна: от визуальных концепций до текстов и идей спец. проектов. Обожаю проекты с характером и смыслом, когда есть не только форма, но и сильная идея.', links: [] },
-          qr: { title: 'QR Code', text: 'Здесь позже появится QR-код или быстрый доступ к дополнительным материалам.', links: [] }
-        }
-      },
-      en: {
-        htmlLang: 'en',
-        pageTitle: 'Bogdan Zalessky',
-        metaDescription: 'Creative portfolio and contacts of Bogdan Zalessky',
-        titlebar: '📁 bogdan_zaless',
-        sidebarName: 'Bogdan',
-        sidebarTag: 'Creative Director',
-        navTitle: 'Favorites',
-        navDesktop: '🖥️ Desktop',
-        navLinks: '🔗 Links',
-        navWork: '💼 Work',
-        navContacts: '💬 Contacts',
-        heroTitle: 'Bogdan<br>Zalesskiy',
-        heroLead: 'Hi! Here you’ll find my work, contacts, and a few interesting things.',
-        fileSocial: 'Socials',
-        filePortfolio: 'Portfolio',
-        fileContacts: 'Contacts',
-        fileAbout: 'about.txt',
-        fileQr: 'QR Code',
-        openWindowButton: '📁 Open Finder',
-        openFolderPrefix: '📂 Open ',
-        previewOnly: 'Preview only',
-        noLinks: 'no links',
-        grid: 'Grid',
-        list: 'List',
-        share: 'Share',
-        copied: 'Copied',
-        copyFailed: 'Copy failed',
-        languageButton: 'RU',
-        windowControls: 'Window controls',
-        folderControls: 'Folder controls',
-        closeWindow: 'Close window',
-        minimizeWindow: 'Minimize window',
-        fullscreenWindow: 'Enter fullscreen',
-        closeFolder: 'Close folder',
-        minimizeFolder: 'Minimize folder',
-        fullscreenFolder: 'Open folder fullscreen',
-        folders: {
-          social: { title: 'Socials', text: 'The main ways to contact me and follow my work.' },
-          portfolio: { title: 'Portfolio', text: 'A selection of my work, cases, and projects.', links: [{ label: 'Coming soon', url: '#' }] },
-          contacts: { title: 'Contacts', text: 'The fastest way to reach me and discuss a project.' },
-          about: { title: 'about.txt', text: 'I have been working in creativity, marketing, and design for years: from visual concepts to copy and ideas for special projects. I love projects with character and meaning — projects where there is not only form, but also a strong idea.', links: [] },
-          qr: { title: 'QR Code', text: 'A QR code or quick access to extra materials will appear here later.', links: [] }
-        }
-      }
-    };
+  </div>
 
-    function assertElement(name, element) {
-      if (!element) {
-        throw new Error(`Missing required element: ${name}`);
-      }
+  <!-- MOBILE BOTTOM TABS -->
+  <div class="mob-tabs">
+    <div class="mob-tabs-inner">
+      <button class="mob-tab active" id="mt-about"      onclick="navigate('about')">      <div class="mt-icon">🏠</div><div class="mt-lbl" data-i18n="about">About</div></button>
+      <button class="mob-tab"        id="mt-projects"   onclick="navigate('projects')">   <div class="mt-icon">📁</div><div class="mt-lbl" data-i18n="projects">Works</div></button>
+      <button class="mob-tab"        id="mt-skills"     onclick="navigate('skills')">     <div class="mt-icon">⚡</div><div class="mt-lbl" data-i18n="skills">Skills</div></button>
+      <button class="mob-tab"        id="mt-experience" onclick="navigate('experience')"> <div class="mt-icon">💼</div><div class="mt-lbl" data-i18n="experience">Exp</div></button>
+      <button class="mob-tab"        id="mt-contact"    onclick="navigate('contact')">    <div class="mt-icon">✉️</div><div class="mt-lbl" data-i18n="contact">Contact</div></button>
+    </div>
+  </div>
+
+  <!-- STATUS BAR -->
+  <div class="status-bar"><span id="statusText">—</span></div>
+
+</div><!-- /finder-window -->
+
+<script>
+// ═══════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════
+const DATA = {
+  en: {
+    name: "Bogdan Zalessky",
+    initials: "BZ",
+    role: "Creator · Creative Copywriter · Middle Creator at Mosaic",
+    location: "Russia",
+    bio: "Hi! I'm Bogdan — creator and creative copywriter at Mosaic agency. I develop ad concepts and campaigns for major Russian brands: МТС, Яндекс, ВТБ. Background in branding, event design and SMM.",
+    status: "Open to projects",
+    email: "bogdanzaless@gmail.com",
+    tg: "https://t.me/bogdan_zaless",
+    web: "https://bogdanzaless.ru",
+    available: "Open to projects",
+    experience_years: "4+ Years",
+    projects_count: "12+ Projects",
+    resp_time: "~12h",
+    timezone: "MSK / UTC+3",
+    sections: {
+      fav:"Favorites", work:"Work", connect:"Connect", tags:"Tags",
+      about:"About", projects:"Works", skills:"Skills",
+      experience:"Experience", contact:"Contact",
+      dp_hint:"Select an item\nto view info",
+    },
+    projects: [
+      {id:"p1",name:"МТС — «Красный огонёк»",icon:"📺",type:"Creative Campaign · Show",date:"Dec 2025",
+       desc:"New Year music show for МТС youth tariff 'РИИЛ', produced at Mosaic agency as Junior Creator. Filmed at ДК Кристалл during Фестик Зима 2025 with Марк Эйдельштейн, Дмитрий Маликов, Лауд and 10+ artists. Covered on Sostav.ru.",
+       tags:["Campaign","Creative","МТС","Show"],color:"digital",size:"—",link:"https://www.sostav.ru/publication/mts-snyal-novogodnee-shou-krasnyj-ogonek-dlya-zumerov-80832.html"},
+      {id:"p2",name:"Яндекс · ВТБ · МТС",icon:"💡",type:"Creative Ad Campaigns",date:"2025–2026",
+       desc:"Creative advertising campaigns for Яндекс, ВТБ and МТС at Mosaic agency. Developed concepts, scripts and copy across digital and media channels.",
+       tags:["Campaign","Copywriting","Concept","Advertising"],color:"digital",size:"—"},
+      {id:"p3",name:"Т-Банк — Возврат",icon:"🏦",type:"Advertising Concept",date:"2024",
+       desc:"Developed a full promotional concept for T-Bank's cashback service Т-Банк Возврат. Campaign idea shortlisted at Luchnik Budushchee — one of Russia's top advertising competitions for young professionals.",
+       tags:["Campaign","Concept","Shortlist","Advertising"],color:"bank",size:"—"},
+      {id:"p4",name:"Альфа-Банк — Лизинг",icon:"💳",type:"Motion & Banner Design",date:"2024",
+       desc:"Internet banners and 3D OLV video ads for Alfa-Leasing, a financial product of Alfa-Bank. Produced motion graphics and animated brand assets across digital ad placements.",
+       tags:["Motion","3D","Banners","OLV"],color:"bank",size:"2.4 GB"},
+      {id:"p5",name:"GJO.E × FCSM",icon:"📽️",type:"Event Visual Design",date:"2023",
+       desc:"Projection show with 4K projectors at Tsvetnoy Central Market for the GJO.E × FCSM collab drop. Animated logo, custom stage with a guest choir, holographic invitations, Moscow-wide posters. Collection sold out in first days. Guests: ST, Mikhail Bashkatov, Timur Yeremeyev.",
+       tags:["Motion","After Effects","Millumin 4","Event"],color:"motion",size:"12 GB"},
+      {id:"p6",name:"HOOD GYM",icon:"🏋️",type:"Print & Advertising",date:"2024",
+       desc:"Advertising materials — flyers, posters and print-ready files — for the HOOD GYM fitness club chain. Full prepress preparation and handoff to print production.",
+       tags:["Print","Advertising","Typography"],color:"brand",size:"890 MB"},
+      {id:"p7",name:"Коврижка Зарайская",icon:"☕",type:"Brand Identity & SMM",date:"2024",
+       desc:"Full rebrand for Kovrizhka Zаrayskaya café from scratch — new visual identity, brand book, SMM strategy and promo campaigns. Defined the brand's tone of voice and digital presence.",
+       tags:["Branding","Brand Book","SMM"],color:"brand",size:"1.6 GB"},
+      {id:"p8",name:"No Worries Cakes",icon:"🎂",type:"Brand & Marketing",date:"2022–2023",
+       desc:"Chief of Marketing & Design for the custom ugly-cake brand. Built SMM strategy across Instagram and Telegram, led collabs with CHIHO and TrustMe Studio. A Resident Evil-themed promo — a virus infects a cake — drove 123% growth in orders.",
+       tags:["SMM","Branding","Collabs","Figma"],color:"brand",size:"4.2 GB"},
+      {id:"p9",name:"TrustMe Studio",icon:"🩺",type:"Fashion & Advertising",date:"2023–2025",
+       desc:"Graphic & communication designer for TrustMe Studio — dark medical-aesthetic fashion, limited drops only. Redesigned the logo (Umbrella Corp style), built a cycling gear collection, refined cuts. Collab shirts with Masha Rudenko sold out in 48 hours; brand earned fashion press coverage.",
+       tags:["Fashion","Logo","Print","Advertising"],color:"fashion",size:"8.8 GB"},
+      {id:"p10",name:"Два Мяча & Ewing",icon:"👟",type:"Banners & Print",date:"2023",
+       desc:"HTML banners with CTA and print materials (boxes, softboxes, posters) for two brands: Ewing — bringing the American brand to Russia — and Два Мяча, fall collection at the Хлебозавод flagship. Boosted CTR and offline presence.",
+       tags:["HTML/CSS","Print","Advertising","Figma"],color:"brand",size:"1.1 GB"},
+      {id:"p11",name:"Other Projects",icon:"🗂️",type:"Mixed",date:"2022–now",
+       desc:"Vintage Porsche ad poster · Moscow Ministry of Tourism flashmob identity · B&D fashion editorial · EkoNiva product launch & packaging · KRONOS Smart City brand book · Russian Bodybuilding Federation — communication & motion · Freelance photographer website · Media Crush book promo.",
+       tags:["Branding","Editorial","Motion","Web"],color:"digital",size:"—"},
+    ],
+    skills: [
+      {cat:"Design",items:[["Graphic Design",92],["Brand Identity",90],["Communication Design",88],["Typography",85],["Print & Packaging",82]]},
+      {cat:"Advertising & Copy",items:[["Creative Concepts",90],["Copywriting",84],["Ad Materials & Banners",88],["SMM Strategy",85],["Event Visual Design",80]]},
+      {cat:"Tools",items:[["Figma",92],["Adobe Photoshop",90],["After Effects",80],["Adobe Illustrator",78],["HTML & CSS",72]]},
+      {cat:"Microsoft Office",items:[["PowerPoint",88],["Word",85],["Excel",78],["Outlook",80]]},
+    ],
+    experience: [
+      {role:"Creator · Creative Copywriter · Middle Creator",company:"Mosaic Agency",period:"2025 – present",
+       desc:"Develop creative concepts and ad campaigns for major Russian brands: МТС, Яндекс, ВТБ. Credits include МТС «Красный огонёк» — a New Year show covered on Sostav.ru — as Junior Creator."},
+      {role:"Advertising Concept · Shortlist",company:"Т-Банк (Luchnik Budushchee)",period:"2024",
+       desc:"Developed a promotional campaign concept for Т-Банк Возврат cashback service. Selected for the shortlist of Luchnik Budushchee — top Russian advertising competition for emerging professionals."},
+      {role:"Motion & Banner Designer",company:"Alfa-Bank — Alfa-Leasing",period:"2024",
+       desc:"Created internet banners and 3D OLV video ads for Alfa-Leasing. Produced motion graphics and animated brand assets for digital ad placements."},
+      {role:"Brand Identity & SMM",company:"Коврижка Зарайская",period:"2024",
+       desc:"Full rebrand from scratch — visual identity, brand book, SMM strategy and promo campaigns for a café."},
+      {role:"Print & Advertising Designer",company:"HOOD GYM",period:"2024",
+       desc:"Flyers, posters and print-ready files for a fitness club chain. Full prepress and handoff to production."},
+      {role:"Graphic & Communication Designer",company:"TrustMe Studio",period:"2023 – 2025",
+       desc:"Logo redesign (Umbrella Corp style), cycling gear collection, refined clothing cuts. Collab shirts with Masha Rudenko sold out in 48 hours; brand earned fashion press coverage."},
+      {role:"Projection & Motion Designer",company:"GJO.E × FCSM / Tsvetnoy",period:"2023",
+       desc:"4K projection show, animated logo, custom stage, holographic invitations and Moscow-wide posters for a collab event at Tsvetnoy Central Market."},
+      {role:"Chief of Marketing & Design",company:"No Worries Cakes",period:"2022 – 2023",
+       desc:"Built SMM strategy from scratch, ran Instagram and Telegram, led collabs with CHIHO and TrustMe Studio. Viral Resident Evil-themed promo drove 123% growth in orders."},
+    ],
+  },
+  ru: {
+    name: "Богдан Залесский",
+    initials: "БЗ",
+    role: "Креатор · Креативный копирайтер · Middle Creator в Mosaic",
+    location: "Россия",
+    bio: "Привет! Я Богдан — креатор и креативный копирайтер в агентстве Mosaic. Разрабатываю рекламные концепции и кампании для крупных российских брендов: МТС, Яндекс, ВТБ. Бэкграунд в брендинге, ивент-дизайне и SMM.",
+    status: "Открыт для проектов",
+    email: "bogdanzaless@gmail.com",
+    tg: "https://t.me/bogdan_zaless",
+    web: "https://bogdanzaless.ru",
+    available: "Открыт для проектов",
+    experience_years: "4+ года",
+    projects_count: "12+ проектов",
+    resp_time: "~12ч",
+    timezone: "МСК / UTC+3",
+    sections: {
+      fav:"Избранное", work:"Работа", connect:"Связь", tags:"Теги",
+      about:"Обо мне", projects:"Работы", skills:"Навыки",
+      experience:"Опыт", contact:"Контакт",
+      dp_hint:"Выбери элемент,\nчтобы увидеть инфо",
+    },
+    projects: [
+      {id:"p1",name:"МТС — «Красный огонёк»",icon:"📺",type:"Рекламная кампания · Шоу",date:"Дек 2025",
+       desc:"Новогоднее музыкальное шоу для молодёжного тарифа МТС «РИИЛ», произведено в агентстве Mosaic (Младший креатор). Съёмка в ДК Кристалл на Фестике Зима 2025 с Марком Эйдельштейном, Дмитрием Маликовым, Лаудом и 10+ артистами. Материал вышел на Sostav.ru.",
+       tags:["Кампания","Креатив","МТС","Шоу"],color:"digital",size:"—",link:"https://www.sostav.ru/publication/mts-snyal-novogodnee-shou-krasnyj-ogonek-dlya-zumerov-80832.html"},
+      {id:"p2",name:"Яндекс · ВТБ · МТС",icon:"💡",type:"Рекламные кампании",date:"2025–2026",
+       desc:"Разработка креативных рекламных кампаний для Яндекса, ВТБ и МТС в агентстве Mosaic. Концепции, сценарии и копирайт для диджитал и медиаканалов.",
+       tags:["Кампания","Копирайтинг","Концепция","Реклама"],color:"digital",size:"—"},
+      {id:"p3",name:"Т-Банк — Возврат",icon:"🏦",type:"Рекламная концепция",date:"2024",
+       desc:"Разработал полную концепцию продвижения сервиса Т-Банк Возврат (кэшбэк). Идея кампании вышла в шорт-лист конкурса «Лучник Будущее» — одного из ведущих рекламных конкурсов России для молодых специалистов.",
+       tags:["Кампания","Концепция","Шорт-лист","Реклама"],color:"bank",size:"—"},
+      {id:"p4",name:"Альфа-Банк — Лизинг",icon:"💳",type:"Моушн и баннеры",date:"2024",
+       desc:"Интернет-баннеры и 3D OLV-ролики для продукта Альфа-Лизинг от Альфа-Банка. Разработал моушн-графику и анимированные брендовые активы для цифровых рекламных каналов.",
+       tags:["Моушн","3D","Баннеры","OLV"],color:"bank",size:"2.4 ГБ"},
+      {id:"p5",name:"GJO.E × FCSM",icon:"📽️",type:"Ивент-дизайн",date:"2023",
+       desc:"Проекционное шоу на 4K-проекторах в ЦУМе Tsvetnoy Central Market для дропа коллаборации GJO.E × FCSM. Анимированный логотип, кастомная сцена с хором, голографические приглашения, постеры по всей Москве. Коллекция распродана в первые дни. Гости: ST, Михаил Башкатов, Тимур Еремеев.",
+       tags:["Моушн","After Effects","Millumin 4","Ивент"],color:"motion",size:"12 ГБ"},
+      {id:"p6",name:"HOOD GYM",icon:"🏋️",type:"Полиграфия и реклама",date:"2024",
+       desc:"Рекламные материалы — флаеры, постеры и файлы для печати — для сети фитнес-клубов HOOD GYM. Полная препресс-подготовка и передача в производство.",
+       tags:["Полиграфия","Реклама","Типографика"],color:"brand",size:"890 МБ"},
+      {id:"p7",name:"Коврижка Зарайская",icon:"☕",type:"Айдентика и SMM",date:"2024",
+       desc:"Полный ребрендинг кафе «Коврижка Зарайская» с нуля — фирменный стиль, брендбук, стратегия соцсетей и промоакции. Разработал tone of voice и диджитал-присутствие бренда.",
+       tags:["Брендинг","Брендбук","SMM"],color:"brand",size:"1.6 ГБ"},
+      {id:"p8",name:"No Worries Cakes",icon:"🎂",type:"Брендинг и маркетинг",date:"2022–2023",
+       desc:"Руководитель маркетинга и дизайна кастомного кейк-бренда. Выстроил SMM-стратегию в Instagram и Telegram, провёл коллаборации с CHIHO и TrustMe Studio. Промо-видео в стиле Resident Evil — рост заказов на 123%.",
+       tags:["SMM","Брендинг","Коллабы","Figma"],color:"brand",size:"4.2 ГБ"},
+      {id:"p9",name:"TrustMe Studio",icon:"🩺",type:"Мода и реклама",date:"2023–2025",
+       desc:"Графический и коммуникационный дизайнер TrustMe Studio — тёмная медицинская эстетика, только лимитированные дропы. Переработал логотип (стиль Umbrella Corp), создал коллекцию велоодежды, доработал лекала. Рубашки в коллабе с Машей Руденко распроданы за 48 часов; бренд попал в фэшн-прессу.",
+       tags:["Мода","Логотип","Полиграфия","Реклама"],color:"fashion",size:"8.8 ГБ"},
+      {id:"p10",name:"Два Мяча & Ewing",icon:"👟",type:"Баннеры и полиграфия",date:"2023",
+       desc:"HTML-баннеры с CTA и печатные материалы (коробки, софтбоксы, постеры) для двух брендов: Ewing — выход американского бренда на российский рынок — и Два Мяча, осенняя коллекция в флагмане на Хлебозаводе. Рост CTR и офлайн-присутствие.",
+       tags:["HTML/CSS","Полиграфия","Реклама","Figma"],color:"brand",size:"1.1 ГБ"},
+      {id:"p11",name:"Другие проекты",icon:"🗂️",type:"Разное",date:"2022–н.в.",
+       desc:"Ретро-постер Porsche · Айдентика флешмоба Министерства туризма Москвы · Fashion-эдиториал B&D · Брендинг и упаковка EkoNiva · Брендбук KRONOS Smart City · Федерация бодибилдинга России — коммуникационный и моушн-дизайн · Сайт для фотографа · Промо книги Media Crush.",
+       tags:["Брендинг","Эдиториал","Моушн","Веб"],color:"digital",size:"—"},
+    ],
+    skills: [
+      {cat:"Дизайн",items:[["Графический дизайн",92],["Айдентика бренда",90],["Коммуникационный дизайн",88],["Типографика",85],["Полиграфия и упаковка",82]]},
+      {cat:"Реклама и копирайтинг",items:[["Креативные концепции",90],["Копирайтинг",84],["Рекламные материалы",88],["SMM-стратегия",85],["Ивент-дизайн",80]]},
+      {cat:"Инструменты",items:[["Figma",92],["Adobe Photoshop",90],["After Effects",80],["Adobe Illustrator",78],["HTML & CSS",72]]},
+      {cat:"Microsoft Office",items:[["PowerPoint",88],["Word",85],["Excel",78],["Outlook",80]]},
+    ],
+    experience: [
+      {role:"Креатор · Креативный копирайтер · Middle Creator",company:"Агентство Mosaic",period:"2025 – н.в.",
+       desc:"Разработка рекламных концепций и кампаний для крупных брендов: МТС, Яндекс, ВТБ. В числе проектов — МТС «Красный огонёк» (Младший креатор), опубликовано на Sostav.ru."},
+      {role:"Рекламная концепция · Шорт-лист",company:"Т-Банк («Лучник Будущее»)",period:"2024",
+       desc:"Концепция рекламной кампании сервиса Т-Банк Возврат. Вышел в шорт-лист конкурса «Лучник Будущее» — ведущего рекламного конкурса России для молодых специалистов."},
+      {role:"Моушн и баннерный дизайнер",company:"Альфа-Банк — Альфа-Лизинг",period:"2024",
+       desc:"Интернет-баннеры и 3D OLV-ролики для продукта Альфа-Лизинг. Моушн-графика и анимированные брендовые активы для диджитал-рекламы."},
+      {role:"Айдентика и SMM",company:"Коврижка Зарайская",period:"2024",
+       desc:"Полный ребрендинг с нуля — фирменный стиль, брендбук, стратегия соцсетей и промоакции для кафе."},
+      {role:"Полиграфия и реклама",company:"HOOD GYM",period:"2024",
+       desc:"Флаеры, постеры и файлы для печати для сети фитнес-клубов. Полная препресс-подготовка."},
+      {role:"Графический и коммуникационный дизайнер",company:"TrustMe Studio",period:"2023 – 2025",
+       desc:"Ребрендинг логотипа (стиль Umbrella Corp), коллекция велоодежды, доработка лекал. Коллаб с Машей Руденко — распродано за 48 часов; бренд в фэшн-прессе."},
+      {role:"Техник проекций и моушн-дизайнер",company:"GJO.E × FCSM / Tsvetnoy",period:"2023",
+       desc:"4K-проекционное шоу, анимированный логотип, кастомная сцена, голографические приглашения и постеры по всей Москве для ивента в ЦУМе Tsvetnoy."},
+      {role:"Руководитель маркетинга и дизайна",company:"No Worries Cakes",period:"2022 – 2023",
+       desc:"SMM-стратегия с нуля, Instagram и Telegram, коллабы с CHIHO и TrustMe Studio. Вирусный ролик в стиле Resident Evil — рост заказов на 123%."},
+    ],
+  }
+};
+
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+let lang     = 'en';
+let section  = 'about';
+let view     = 'icon';
+let query    = '';
+let hist     = ['about'];
+let hIdx     = 0;
+let isFullscreen = false;
+let isMinimized  = false;
+let selectedId   = null;
+
+const d = () => DATA[lang];
+
+// ═══════════════════════════════════════════
+//  THEME
+// ═══════════════════════════════════════════
+let isDark = true;
+
+function toggleTheme() {
+  isDark = !isDark;
+  document.getElementById('htmlRoot').classList.toggle('dark', isDark);
+  document.getElementById('themeBtn').textContent = isDark ? '☀️' : '🌙';
+}
+
+// ═══════════════════════════════════════════
+//  TRAFFIC LIGHTS
+// ═══════════════════════════════════════════
+function tlClose() {
+  const w = document.getElementById('finderWindow');
+  w.classList.add('closing');
+  setTimeout(() => {
+    w.classList.add('hidden');
+    w.classList.remove('closing');
+    document.getElementById('closedOverlay').classList.add('visible');
+  }, 200);
+}
+
+function reopenWindow() {
+  const w = document.getElementById('finderWindow');
+  document.getElementById('closedOverlay').classList.remove('visible');
+  w.classList.remove('hidden');
+  w.style.opacity = '0';
+  w.style.transform = 'scale(0.94)';
+  requestAnimationFrame(() => {
+    w.style.transition = 'opacity 0.22s,transform 0.3s cubic-bezier(0.34,1.2,0.64,1)';
+    w.style.opacity = '1';
+    w.style.transform = '';
+    setTimeout(() => { w.style.transition = ''; }, 320);
+  });
+}
+
+function tlMinimize() {
+  if (isMinimized) { restoreWindow(); return; }
+  const w = document.getElementById('finderWindow');
+  isMinimized = true;
+  w.classList.add('minimizing');
+  setTimeout(() => {
+    w.classList.add('hidden');
+    w.classList.remove('minimizing');
+    const dock = document.getElementById('miniDock');
+    dock.style.display = 'flex';
+    setTimeout(() => dock.classList.add('visible'), 10);
+  }, 280);
+}
+
+function restoreWindow() {
+  const dock = document.getElementById('miniDock');
+  dock.classList.remove('visible');
+  setTimeout(() => { dock.style.display = ''; }, 350);
+  const w = document.getElementById('finderWindow');
+  w.classList.remove('hidden');
+  isMinimized = false;
+  w.style.opacity = '0';
+  w.style.transform = 'scale(0.88) translateY(30px)';
+  requestAnimationFrame(() => {
+    w.style.transition = 'opacity 0.28s,transform 0.38s cubic-bezier(0.34,1.3,0.64,1)';
+    w.style.opacity = '1';
+    w.style.transform = '';
+    setTimeout(() => { w.style.transition = ''; }, 400);
+  });
+}
+
+function tlFullscreen() {
+  const w = document.getElementById('finderWindow');
+  if (!isFullscreen) {
+    if (w.requestFullscreen) {
+      w.requestFullscreen().catch(() => cssFullscreen(true));
+    } else {
+      cssFullscreen(true);
     }
-
-    function runSmokeTests() {
-      assertElement('finderWindow', finderWindow);
-      assertElement('closeWindow', closeWindow);
-      assertElement('minimizeWindow', minimizeWindow);
-      assertElement('fullscreenWindow', fullscreenWindow);
-      assertElement('openWindow', openWindow);
-      assertElement('modal', modal);
-      assertElement('modalTitle', modalTitle);
-      assertElement('folderTitlebar', folderTitlebar);
-      assertElement('closeFolder', closeFolder);
-      assertElement('minimizeFolder', minimizeFolder);
-      assertElement('fullscreenFolder', fullscreenFolder);
-      assertElement('openFolder', openFolder);
-      assertElement('modalText', modalText);
-      assertElement('modalLinks', modalLinks);
-      assertElement('grid', grid);
-      assertElement('gridBtn', gridBtn);
-      assertElement('shareBtn', shareBtn);
-      assertElement('languageBtn', languageBtn);
-
-      if (files.length === 0) throw new Error('No file buttons found');
-      if (navItems.length === 0) throw new Error('No navigation buttons found');
-
-      files.forEach((file, index) => {
-        JSON.parse(file.dataset.links || '[]');
-        if (!file.dataset.title) throw new Error(`File ${index} has no data-title`);
-      });
+    isFullscreen = true;
+  } else {
+    if (document.exitFullscreen && document.fullscreenElement) {
+      document.exitFullscreen().catch(() => cssFullscreen(false));
+    } else {
+      cssFullscreen(false);
     }
+    isFullscreen = false;
+  }
+}
 
-    function isLocalDebug() {
-      return ['localhost', '127.0.0.1', ''].includes(window.location.hostname) || window.location.search.includes('debug=true');
-    }
+function cssFullscreen(on) {
+  const w = document.getElementById('finderWindow');
+  w.classList.toggle('fullscreen', on);
+  document.body.classList.toggle('is-fullscreen', on);
+}
 
-    function appendTextElement(parent, tagName, text) {
-      const element = document.createElement(tagName);
-      element.textContent = text;
-      parent.appendChild(element);
-      return element;
-    }
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement) { cssFullscreen(false); isFullscreen = false; }
+  else { cssFullscreen(true); }
+});
 
-    function getLinkIcon(link) {
-      const label = `${link.label || ''} ${link.url || ''}`.toLowerCase();
-      if (label.includes('telegram') || label.includes('t.me')) return { icon: '✈️', className: 'telegram' };
-      if (label.includes('instagram')) return { icon: '◎', className: 'instagram' };
-      if (label.includes('email') || label.includes('mailto:')) return { icon: '✉️', className: 'email' };
-      return { icon: '↗', className: 'placeholder' };
-    }
+// ═══════════════════════════════════════════
+//  LANGUAGE
+// ═══════════════════════════════════════════
+function toggleLang() {
+  lang = lang === 'en' ? 'ru' : 'en';
+  document.getElementById('langBtn').textContent = lang === 'en' ? 'RU' : 'EN';
+  document.getElementById('htmlRoot').lang = lang;
+  selectedId = null;
+  clearDetail();
+  applyI18n();
+  renderContent();
+}
 
-    function createLinkRow(link) {
-      const a = document.createElement('a');
-      const iconData = getLinkIcon(link);
-      a.className = 'folder-link';
-      a.href = link.url || '#';
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
+function applyI18n() {
+  const s = d().sections;
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const k = el.dataset.i18n;
+    if (s[k]) el.textContent = s[k];
+  });
+  document.getElementById('searchInput').placeholder = lang === 'en' ? 'Search' : 'Поиск';
+  const dpHint = document.getElementById('dpHint');
+  if (dpHint) dpHint.innerHTML = s.dp_hint.replace('\n','<br>');
+}
 
-      const icon = document.createElement('span');
-      icon.className = `link-icon ${iconData.className}`;
-      icon.textContent = iconData.icon;
-      a.appendChild(icon);
+// ═══════════════════════════════════════════
+//  NAVIGATION
+// ═══════════════════════════════════════════
+function navigate(sec, push=true, keepFilter=false) {
+  if (!keepFilter) {
+    query = '';
+    document.getElementById('searchInput').value = '';
+  }
+  document.querySelectorAll('.sb-item').forEach(e => e.classList.remove('active'));
+  document.querySelectorAll('.mob-tab').forEach(e => e.classList.remove('active'));
+  const si = document.getElementById('si-' + sec);
+  const mt = document.getElementById('mt-' + sec);
+  if (si) si.classList.add('active');
+  if (mt) mt.classList.add('active');
+  section   = sec;
+  selectedId = null;
+  if (push) { hist = hist.slice(0, hIdx+1); hist.push(sec); hIdx = hist.length-1; }
+  updateNavBtns();
+  renderContent();
+  clearDetail();
+}
 
-      appendTextElement(a, 'span', link.label || 'Link').className = 'folder-link-name';
-      return a;
-    }
+function updateNavBtns() {
+  document.getElementById('btnBack').disabled = hIdx <= 0;
+  document.getElementById('btnFwd').disabled  = hIdx >= hist.length-1;
+}
+function goBack() { if (hIdx>0) { hIdx--; navigate(hist[hIdx],false); } }
+function goFwd()  { if (hIdx<hist.length-1) { hIdx++; navigate(hist[hIdx],false); } }
 
-    function createEmptyRow() {
-      const empty = document.createElement('div');
-      empty.className = 'empty-folder';
-      appendTextElement(empty, 'strong', translations[currentLanguage].previewOnly);
-      appendTextElement(empty, 'span', ` — ${translations[currentLanguage].noLinks}`);
-      return empty;
-    }
+// ═══════════════════════════════════════════
+//  VIEW & SEARCH
+// ═══════════════════════════════════════════
+function setView(v) {
+  view = v;
+  document.getElementById('vIcon').classList.toggle('active', v==='icon');
+  document.getElementById('vList').classList.toggle('active', v==='list');
+  renderContent();
+}
 
-    function parseLinks(file) {
-      const folderKey = file.dataset.folder;
-      const folderTranslation = translations[currentLanguage].folders[folderKey];
+function handleSearch(val) {
+  query = val.toLowerCase();
+  if (query && section !== 'projects') navigate('projects', true, true);
+  else renderContent();
+}
 
-      if (folderTranslation && Array.isArray(folderTranslation.links)) {
-        return folderTranslation.links;
-      }
+function filterTag(t) { query = t; navigate('projects', true, true); }
 
-      try {
-        const links = JSON.parse(file.dataset.links || '[]');
-        return Array.isArray(links) ? links : [];
-      } catch (error) {
-        return [];
-      }
-    }
+// ═══════════════════════════════════════════
+//  RENDER ROUTER
+// ═══════════════════════════════════════════
+function renderContent() {
+  const inner = document.getElementById('contentInner');
+  const title = d().sections[section] || section;
+  document.getElementById('toolbarTitle').textContent = title;
+  document.getElementById('pathCurrent').textContent  = title;
+  inner.innerHTML = '';
+  const map = {about:renderAbout,projects:renderProjects,skills:renderSkills,experience:renderExp,contact:renderContact};
+  if (map[section]) map[section](inner);
+}
 
-    function getFolderContent(file) {
-      const folderKey = file.dataset.folder;
-      const folderTranslation = translations[currentLanguage].folders[folderKey];
+// ─── ABOUT ───
+function renderAbout(el) {
+  setStatus('1');
+  const m = d();
+  el.innerHTML = `
+  <div class="sec">
+    <div class="card">
+      <div class="avatar" id="aboutAvatar">${m.initials}</div>
+      <div class="about-name">${m.name}</div>
+      <div class="about-role">${m.role}</div>
+      <div class="about-bio">${m.bio}</div>
+      <div class="chips">
+        <a class="chip" href="mailto:${m.email}">✉️ ${m.email}</a>
+        <a class="chip" href="${m.tg}" target="_blank">✈️ Telegram</a>
+        <a class="chip" href="${m.web}" target="_blank">🌐 ${m.web.replace('https://','')}</a>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-tile"><div class="it-lbl">${lang==='en'?'Location':'Город'}</div><div class="it-val">📍 ${m.location}</div></div>
+      <div class="info-tile"><div class="it-lbl">${lang==='en'?'Status':'Статус'}</div><div class="it-val" style="color:#27ae60;font-size:13px">● ${m.available}</div></div>
+      <div class="info-tile"><div class="it-lbl">${lang==='en'?'Experience':'Опыт'}</div><div class="it-val">${m.experience_years}</div></div>
+      <div class="info-tile"><div class="it-lbl">${lang==='en'?'Projects':'Проекты'}</div><div class="it-val">${m.projects_count}</div></div>
+    </div>
+  </div>`;
+  // Load avatar image without inline handlers
+  const av = document.getElementById('aboutAvatar');
+  const img = new Image();
+  img.onload = () => {
+    av.textContent = '';
+    av.style.backgroundImage = `url('${img.src}')`;
+    av.style.backgroundSize = 'cover';
+    av.style.backgroundPosition = 'center';
+  };
+  img.src = 'https://bogdanzaless.ru/avatar.png';
+}
 
-      return {
-        title: folderTranslation?.title || file.dataset.title || 'Untitled',
-        text: folderTranslation?.text || file.dataset.text || '',
-        links: parseLinks(file)
-      };
-    }
-
-    function applyLanguage(language) {
-      currentLanguage = language;
-      const dictionary = translations[currentLanguage];
-
-      document.documentElement.lang = dictionary.htmlLang;
-      document.title = dictionary.pageTitle;
-      document.querySelector('meta[name="description"]')?.setAttribute('content', dictionary.metaDescription);
-
-      document.querySelectorAll('[data-i18n]').forEach(element => {
-        const key = element.dataset.i18n;
-        if (dictionary[key] !== undefined) {
-          element.innerHTML = dictionary[key];
-        }
-      });
-
-      document.querySelectorAll('[data-i18n-aria]').forEach(element => {
-        const key = element.dataset.i18nAria;
-        if (dictionary[key] !== undefined) {
-          element.setAttribute('aria-label', dictionary[key]);
-        }
-      });
-
-      files.forEach(file => {
-        const content = getFolderContent(file);
-        file.dataset.title = content.title;
-        file.dataset.text = content.text;
-      });
-
-      gridBtn.textContent = isGrid ? dictionary.grid : dictionary.list;
-      shareBtn.textContent = dictionary.share;
-      languageBtn.textContent = dictionary.languageButton;
-      openWindow.textContent = dictionary.openWindowButton;
-
-      if (modal.classList.contains('open') && activeFolderKey) {
-        const activeFile = files.find(file => file.dataset.folder === activeFolderKey);
-        if (activeFile) openModal(activeFile);
-      } else if (openFolder.classList.contains('visible')) {
-        openFolder.textContent = `${dictionary.openFolderPrefix}${activeFolderTitle}`;
-      }
-    }
-
-    function toggleLanguage() {
-      applyLanguage(currentLanguage === 'ru' ? 'en' : 'ru');
-    }
-
-    function renderFolderContent(title, text, links) {
-      modal.classList.add('folder-window');
-      modal.classList.remove('editor-window');
-      modalLinks.replaceChildren();
-
-      const summary = document.createElement('div');
-      summary.className = 'folder-summary';
-      appendTextElement(summary, 'p', text);
-
-      const items = document.createElement('div');
-      items.className = 'folder-items';
-
-      if (!links.length) {
-        items.appendChild(createEmptyRow());
-      }
-
-      links.forEach(link => {
-        items.appendChild(createLinkRow(link));
-      });
-
-      modalLinks.append(summary, items);
-    }
-
-    function renderEditorContent(title, text) {
-      modal.classList.add('editor-window');
-      modal.classList.remove('folder-window', 'preview-window');
-      modalLinks.replaceChildren();
-
-      const shell = document.createElement('div');
-      shell.className = 'editor-shell';
-
-      const toolbar = document.createElement('div');
-      toolbar.className = 'editor-toolbar';
-      appendTextElement(toolbar, 'span', translations[currentLanguage].previewOnly);
-
-      const paper = document.createElement('pre');
-      paper.className = 'editor-paper';
-      paper.setAttribute('aria-readonly', 'true');
-      paper.textContent = text;
-
-      shell.append(toolbar, paper);
-      modalLinks.appendChild(shell);
-    }
-
-    function renderPreviewContent(title, src) {
-      modal.classList.add('preview-window');
-      modal.classList.remove('folder-window', 'editor-window');
-      modalLinks.replaceChildren();
-
-      const shell = document.createElement('div');
-      shell.className = 'preview-shell';
-
-      const image = document.createElement('img');
-      image.className = 'preview-image';
-      image.src = src;
-      image.alt = title;
-
-      shell.appendChild(image);
-      modalLinks.appendChild(shell);
-    }
-
-    function openModal(file) {
-      files.forEach(item => item.classList.remove('selected'));
-
-      const content = getFolderContent(file);
-      const title = content.title;
-      const text = content.text;
-      const links = content.links;
-      const isTextFile = file.dataset.folder === 'about' || title.toLowerCase().endsWith('.txt');
-      const isImageFile = /\.(png|jpe?g|webp|gif|svg)$/i.test(title);
-
-      activeFolderTitle = title;
-      activeFolderKey = file.dataset.folder || null;
-      modalTitle.textContent = title;
-      folderTitlebar.textContent = title;
-      openFolder.textContent = `${translations[currentLanguage].openFolderPrefix}${title}`;
-      modalText.textContent = '';
-
-      if (isImageFile) {
-        renderPreviewContent(title, title);
-      } else if (isTextFile) {
-        renderEditorContent(title, text);
-      } else {
-        renderFolderContent(title, text, links);
-      }
-
-      modal.classList.remove('minimized', 'fullscreen', 'closing', 'opening');
-      openFolder.classList.remove('visible');
-      modal.classList.add('open');
-      playModalOpeningAnimation();
-    }
-
-    function clearFileSelection() {
-      files.forEach(file => {
-        file.classList.remove('selected');
-        file.blur();
-      });
-    }
-
-    function closeModal() {
-      if (!modal.classList.contains('open')) {
-        modal.classList.remove('minimized', 'fullscreen', 'closing');
-        openFolder.classList.remove('visible');
-        clearFileSelection();
-        return;
-      }
-
-      modal.classList.add('closing');
-      window.setTimeout(() => {
-        modal.classList.remove('open', 'minimized', 'fullscreen', 'closing', 'opening');
-        openFolder.classList.remove('visible');
-        clearFileSelection();
-      }, 220);
-    }
-
-    function minimizeModal() {
-      if (!modal.classList.contains('open')) return;
-      wasModalFullscreen = modal.classList.contains('fullscreen');
-      modal.classList.add('minimized');
-      modal.classList.remove('fullscreen');
-      openFolder.textContent = `${translations[currentLanguage].openFolderPrefix}${activeFolderTitle}`;
-      openFolder.classList.add('visible');
-    }
-
-    function restoreModal() {
-      modal.classList.add('open');
-      modal.classList.remove('minimized', 'closing', 'opening');
-      if (wasModalFullscreen) {
-        modal.classList.add('fullscreen');
-      }
-      playModalOpeningAnimation();
-      openFolder.classList.remove('visible');
-    }
-
-    function toggleModalFullscreen() {
-      if (!modal.classList.contains('open')) return;
-      modal.classList.toggle('fullscreen');
-    }
-
-    function showDockButton() {
-      openWindow.classList.add('visible');
-    }
-
-    function hideDockButton() {
-      openWindow.classList.remove('visible');
-    }
-
-    function playOpeningAnimation(element) {
-      element.classList.remove('opening');
-      void element.offsetWidth;
-      element.classList.add('opening');
-      window.setTimeout(() => element.classList.remove('opening'), 520);
-    }
-
-    function playModalOpeningAnimation() {
-      modal.classList.remove('opening');
-      void modal.offsetWidth;
-      modal.classList.add('opening');
-      window.setTimeout(() => modal.classList.remove('opening'), 460);
-    }
-
-    function restoreWindow() {
-      finderWindow.classList.remove('closed', 'minimized');
-      if (wasWindowFullscreen) {
-        finderWindow.classList.add('fullscreen');
-      }
-      playOpeningAnimation(finderWindow);
-      hideDockButton();
-    }
-
-    function setFilteredFiles(filter) {
-      files.forEach(file => {
-        const show = filter === 'all' || file.dataset.type === filter;
-        file.hidden = !show;
-      });
-    }
-
-    function toggleGridView() {
-      isGrid = !isGrid;
-      grid.classList.toggle('list-view', !isGrid);
-      gridBtn.textContent = isGrid ? translations[currentLanguage].grid : translations[currentLanguage].list;
-      gridBtn.setAttribute('aria-pressed', String(isGrid));
-    }
-
-    function resetShareLabel() {
-      shareBtn.textContent = translations[currentLanguage].share;
-    }
-
-    async function copyToClipboard(text) {
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(text);
-        return true;
-      }
-
-      const textarea = document.createElement('textarea');
-      textarea.value = text;
-      textarea.setAttribute('readonly', '');
-      textarea.style.position = 'fixed';
-      textarea.style.top = '-999px';
-      document.body.appendChild(textarea);
-      textarea.select();
-      const copied = document.execCommand('copy');
-      textarea.remove();
-      return copied;
-    }
-
-    async function sharePage() {
-      const url = window.location.href;
-
-      if (navigator.share) {
-        try {
-          await navigator.share({ title: document.title, url });
-          return;
-        } catch (error) {
-          if (error.name === 'AbortError') return;
-        }
-      }
-
-      try {
-        const copied = await copyToClipboard(url);
-        shareBtn.textContent = copied ? translations[currentLanguage].copied : translations[currentLanguage].copyFailed;
-        setTimeout(resetShareLabel, 1500);
-      } catch (error) {
-        shareBtn.textContent = translations[currentLanguage].copyFailed;
-        setTimeout(resetShareLabel, 1500);
-      }
-    }
-
-    closeWindow.addEventListener('click', () => {
-      wasWindowFullscreen = false;
-      finderWindow.classList.remove('minimized', 'fullscreen', 'opening');
-      finderWindow.classList.add('closed');
-      closeModal();
-      showDockButton();
+// ─── PROJECTS ───
+function renderProjects(el) {
+  let items = d().projects;
+  if (query) items = items.filter(p =>
+    p.name.toLowerCase().includes(query) ||
+    p.tags.some(t => t.toLowerCase().includes(query)) ||
+    p.color.includes(query) || p.type.toLowerCase().includes(query)
+  );
+  setStatus(items.length + (lang==='en'?' items':' элем.'));
+  if (!items.length) {
+    el.innerHTML = `<div style="text-align:center;padding:60px 20px;color:#ccc"><div style="font-size:40px;margin-bottom:10px">🔍</div><p>${lang==='en'?'No results for':'Нет результатов по'} "${query}"</p></div>`;
+    return;
+  }
+  if (view==='icon') {
+    const g = document.createElement('div'); g.className='icon-grid';
+    items.forEach(p => {
+      const d2 = document.createElement('div'); d2.className='icon-item';
+      if (p.id===selectedId) d2.classList.add('selected');
+      d2.innerHTML = `<div class="fi">${p.icon}</div><div class="fn">${p.name}</div>`;
+      d2.onclick = () => selectProject(p, d2);
+      g.appendChild(d2);
     });
-
-    minimizeWindow.addEventListener('click', () => {
-      wasWindowFullscreen = finderWindow.classList.contains('fullscreen');
-      finderWindow.classList.remove('closed', 'fullscreen', 'opening');
-      finderWindow.classList.add('minimized');
-      showDockButton();
+    el.appendChild(g);
+  } else {
+    const w = document.createElement('div'); w.className='list-view';
+    w.innerHTML = `<div class="list-hdr"><span>${lang==='en'?'Name':'Название'}</span><span>${lang==='en'?'Type':'Тип'}</span><span>${lang==='en'?'Year':'Год'}</span></div>`;
+    items.forEach(p => {
+      const r = document.createElement('div'); r.className='list-row';
+      if (p.id===selectedId) r.classList.add('selected');
+      r.innerHTML = `<div class="row-name"><span class="row-icon">${p.icon}</span>${p.name}</div><div class="row-meta">${p.type}</div><div class="row-meta">${p.date}</div>`;
+      r.onclick = () => selectProject(p, r);
+      w.appendChild(r);
     });
+    el.appendChild(w);
+  }
+}
 
-    fullscreenWindow.addEventListener('click', () => {
-      finderWindow.classList.toggle('fullscreen');
+function selectProject(p, el2) {
+  document.querySelectorAll('.icon-item,.list-row').forEach(e => e.classList.remove('selected'));
+  el2.classList.add('selected');
+  selectedId = p.id;
+  const html = `
+    <div class="dp-icon">${p.icon}</div>
+    <div class="dp-name">${p.name}</div>
+    <div class="dp-type">${p.type}</div>
+    <hr class="dp-divider">
+    <div class="dp-sec">${lang==='en'?'Info':'Инфо'}</div>
+    <div class="dp-row"><span class="dk">${lang==='en'?'Type':'Тип'}</span><span class="dv">${p.type}</span></div>
+    <div class="dp-row"><span class="dk">${lang==='en'?'Year':'Год'}</span><span class="dv">${p.date}</span></div>
+    <div class="dp-row"><span class="dk">${lang==='en'?'Size':'Размер'}</span><span class="dv">${p.size}</span></div>
+    <hr class="dp-divider">
+    <div class="dp-sec">${lang==='en'?'Description':'Описание'}</div>
+    <div class="dp-desc">${p.desc}</div>
+    <hr class="dp-divider">
+    <div class="dp-sec">${lang==='en'?'Tags':'Теги'}</div>
+    <div class="tag-list">${p.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+    ${p.link
+      ? `<a class="dp-link" href="${p.link}" target="_blank">📰 ${lang==='en'?'Read on Sostav.ru ↗':'Читать на Sostav.ru ↗'}</a>`
+      : `<a class="dp-link" href="https://bogdanzaless.ru" target="_blank">🔗 ${lang==='en'?'View Portfolio ↗':'Портфолио ↗'}</a>`
+    }`;
+  document.getElementById('detailPanel').innerHTML = html;
+  // Mobile: open bottom sheet
+  if (window.innerWidth <= 768) {
+    document.getElementById('bsContent').innerHTML = html;
+    document.getElementById('bottomSheet').classList.add('open');
+  }
+}
+
+// ─── SKILLS ───
+function renderSkills(el) {
+  const skills = d().skills;
+  const total = skills.reduce((s,g)=>s+g.items.length,0);
+  setStatus(total + (lang==='en'?' skills':' навыков'));
+  let html = '<div class="sec">';
+  skills.forEach(g => {
+    html += `<div><div class="dp-sec" style="font-size:12px;margin-bottom:10px">${g.cat}</div>`;
+    g.items.forEach(([n,pct]) => {
+      html += `<div class="skill-group"><div class="skill-lbl"><span>${n}</span><span>${pct}%</span></div><div class="bar-bg"><div class="bar" data-w="${pct}"></div></div></div>`;
     });
+    html += '</div>';
+  });
+  html += '</div>';
+  el.innerHTML = html;
+  setTimeout(() => el.querySelectorAll('.bar').forEach(b => { b.style.width = b.dataset.w+'%'; }), 60);
+}
 
-    openWindow.addEventListener('click', restoreWindow);
+// ─── EXPERIENCE ───
+function renderExp(el) {
+  const exp = d().experience;
+  setStatus(exp.length + (lang==='en'?' positions':' позиции'));
+  let html = '<div class="sec">';
+  exp.forEach(e => {
+    html += `<div class="exp-item"><div class="exp-role">${e.role}</div><div class="exp-co">${e.company}</div><div class="exp-per">📅 ${e.period}</div><div class="exp-desc">${e.desc}</div></div>`;
+  });
+  html += '</div>';
+  el.innerHTML = html;
+}
 
-    files.forEach(file => {
-      file.addEventListener('click', () => openModal(file));
-    });
+// ─── CONTACT ───
+function renderContact(el) {
+  const m = d();
+  setStatus('3');
+  el.innerHTML = `
+  <div class="sec">
+    <div class="card">
+      <div style="font-size:28px;margin-bottom:10px">👋</div>
+      <div class="about-name" style="font-size:17px">${lang==='en'?"Let's work together":'Давай создадим что-то крутое'}</div>
+      <div class="about-bio">${lang==='en'?'Open to brand projects, art direction, campaigns and digital work. Usually reply within 12 hours.':'Открыт для брендовых проектов, арт-дирекшна, кампаний и цифровых продуктов. Обычно отвечаю в течение 12 часов.'}</div>
+      <div class="chips" style="margin-top:14px">
+        <a class="chip" href="mailto:${m.email}" style="font-size:13px;padding:7px 14px">✉️ Email</a>
+        <a class="chip" href="${m.tg}" target="_blank" style="font-size:13px;padding:7px 14px">✈️ Telegram</a>
+        <a class="chip" href="${m.web}" target="_blank" style="font-size:13px;padding:7px 14px">🌐 Website</a>
+      </div>
+    </div>
+    <div class="info-grid">
+      <div class="info-tile"><div class="it-lbl">${lang==='en'?'Response':'Ответ'}</div><div class="it-val">${m.resp_time}</div></div>
+      <div class="info-tile"><div class="it-lbl">${lang==='en'?'Timezone':'Тайм-зона'}</div><div class="it-val">${m.timezone}</div></div>
+    </div>
+  </div>`;
+}
 
-    closeFolder.addEventListener('click', closeModal);
-    minimizeFolder.addEventListener('click', minimizeModal);
-    fullscreenFolder.addEventListener('click', toggleModalFullscreen);
-    openFolder.addEventListener('click', restoreModal);
+// ═══════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════
+function setStatus(n) {
+  document.getElementById('statusText').textContent =
+    typeof n === 'number' ? n + (lang==='en'?' items':' элем.') : n;
+}
+function clearDetail() {
+  const s = d().sections;
+  document.getElementById('detailPanel').innerHTML = `<div class="dp-empty"><div class="dp-ei">ℹ️</div><p id="dpHint">${s.dp_hint.replace('\n','<br>')}</p></div>`;
+}
+function closeBottomSheet() { document.getElementById('bottomSheet').classList.remove('open'); }
+function openLink(u) { window.open(u,'_blank'); }
 
-    modal.addEventListener('click', event => {
-      if (event.target === modal && !modal.classList.contains('minimized')) {
-        closeModal();
-      }
-    });
-
-    window.addEventListener('keydown', event => {
-      if (event.key === 'Escape') {
-        closeModal();
-      }
-    });
-
-    navItems.forEach(item => {
-      item.addEventListener('click', () => {
-        navItems.forEach(nav => nav.classList.remove('active'));
-        item.classList.add('active');
-        setFilteredFiles(item.dataset.filter || 'all');
-      });
-    });
-
-    gridBtn.addEventListener('click', toggleGridView);
-    shareBtn.addEventListener('click', sharePage);
-    languageBtn.addEventListener('click', toggleLanguage);
-
-    applyLanguage(currentLanguage);
-
-    if (isLocalDebug()) {
-      runSmokeTests();
-    }
-  </script>
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+applyI18n();
+renderContent();
+</script>
 </body>
 </html>

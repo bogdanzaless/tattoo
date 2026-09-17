@@ -1347,3 +1347,47 @@ html:not(.dark) .cm-link.secondary:hover{background:rgba(31,39,50,.09);border-co
 }
 
 .sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+
+/* Mobile tab bar: theme-aware system material */
+@media(max-width:768px){
+  .mob-tabs{
+    position:relative;
+    border-top:1px solid transparent;
+    backdrop-filter:blur(24px) saturate(170%);
+    -webkit-backdrop-filter:blur(24px) saturate(170%);
+    transition:background-color .18s ease,border-color .18s ease,box-shadow .18s ease;
+  }
+  html.dark .mob-tabs{
+    background:rgba(29,31,36,.88);
+    border-top-color:rgba(255,255,255,.075);
+    box-shadow:0 -8px 24px rgba(0,0,0,.12);
+  }
+  html:not(.dark) .mob-tabs{
+    background:rgba(247,248,250,.9);
+    border-top-color:rgba(28,34,43,.12);
+    box-shadow:0 -8px 24px rgba(31,42,58,.055);
+  }
+  .mob-tab{
+    color:inherit;
+    text-decoration:none;
+    -webkit-tap-highlight-color:transparent;
+    transition:background-color .12s ease,color .12s ease,transform .1s ease;
+  }
+  html.dark .mob-tab{color:rgba(235,237,242,.58)}
+  html:not(.dark) .mob-tab{color:rgba(31,36,44,.58)}
+  html.dark .mob-tab.active{color:#79adff;background:rgba(255,255,255,.055)}
+  html:not(.dark) .mob-tab.active{color:#2468cf;background:rgba(35,43,55,.055)}
+  .mob-tab .mt-icon,.mob-tab.active .mt-icon{filter:none}
+  .mob-tab .mt-lbl,.mob-tab.active .mt-lbl{color:inherit}
+  .mob-tab:active{transform:scale(.96)}
+  html.dark .mob-tab:active{background:rgba(255,255,255,.09)}
+  html:not(.dark) .mob-tab:active{background:rgba(28,35,46,.09)}
+}
+@media(max-width:768px) and (hover:hover){
+  html.dark .mob-tab:hover{background:rgba(255,255,255,.075)}
+  html:not(.dark) .mob-tab:hover{background:rgba(28,35,46,.075)}
+}
+@media(max-width:768px) and (prefers-reduced-transparency:reduce){
+  html.dark .mob-tabs{background:#202227!important}
+  html:not(.dark) .mob-tabs{background:#f5f6f8!important}
+}

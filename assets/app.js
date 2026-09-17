@@ -214,7 +214,7 @@ function toggleTheme() {
   document.getElementById('htmlRoot').classList.toggle('dark', isDark);
   document.getElementById('themeIconUse').setAttribute('href', isDark ? '#i-sun' : '#i-moon');
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.content = isDark ? '#1e1e1e' : '#e4e4e4';
+  if (meta) meta.content = isDark ? '#1d1f24' : '#f7f8fa';
 }
 
 // ═══════════════════════════════════════════
